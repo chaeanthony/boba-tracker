@@ -1,0 +1,26 @@
+{
+	"name": "boba-tracker",
+	"version": "1.0.0",
+	"description": "",
+	"homepage": "https://github.com/chaeanthony/boba-tracker#readme",
+	"bugs": {
+		"url": "https://github.com/chaeanthony/boba-tracker/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/chaeanthony/boba-tracker.git"
+	},
+	"license": "ISC",
+	"author": "",
+	"type": "module",
+	"main": "app.js",
+	"scripts": {
+		"test": "node --test",
+		"check": "biome check .",
+		"format": "biome format --write .",
+		"lint": "biome lint ."
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.2.6"
+	}
+}
