@@ -15,6 +15,7 @@
 	"type": "module",
 	"main": "app.js",
 	"scripts": {
+		"start": "node app.js",
 		"test": "node --test",
 		"check": "biome check .",
 		"format": "biome format --write .",
@@ -22,5 +23,9 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.2.6"
+	},
+	"dependencies": {
+		"express": "^5.1.0",
+		"express-handlebars": "^8.0.3"
 	}
 }
