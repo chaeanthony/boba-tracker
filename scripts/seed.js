@@ -1,5 +1,5 @@
+import { boba, reviews, userNotes, users } from "../config/mongoCollections.js";
 import { closeConnection } from "../config/mongoConnection.js";
-import { users, boba, reviews, userNotes } from "../config/mongoCollections.js";
 
 const seedDatabase = async () => {
 	console.log("Starting database seed...");
@@ -10,10 +10,18 @@ const seedDatabase = async () => {
 	const userNotesCollection = await userNotes();
 
 	console.log("Dropping existing collections...");
-	await usersCollection.drop().catch(() => console.log("Users collection didn't exist"));
-	await bobaCollection.drop().catch(() => console.log("Boba collection didn't exist"));
-	await reviewsCollection.drop().catch(() => console.log("Reviews collection didn't exist"));
-	await userNotesCollection.drop().catch(() => console.log("User notes collection didn't exist"));
+	await usersCollection
+		.drop()
+		.catch(() => console.log("Users collection didn't exist"));
+	await bobaCollection
+		.drop()
+		.catch(() => console.log("Boba collection didn't exist"));
+	await reviewsCollection
+		.drop()
+		.catch(() => console.log("Reviews collection didn't exist"));
+	await userNotesCollection
+		.drop()
+		.catch(() => console.log("User notes collection didn't exist"));
 	console.log("Collections dropped");
 
 	console.log("Creating indexes...");
@@ -23,12 +31,15 @@ const seedDatabase = async () => {
 
 	// want unique google_place_id for each store
 	// sparse index allows multiple stores to have null google_place_id
-	await bobaCollection.createIndex({ google_place_id: 1 }, { unique: true, sparse: true });
+	await bobaCollection.createIndex(
+		{ google_place_id: 1 },
+		{ unique: true, sparse: true },
+	);
 
 	// should only be one note per user per store
 	await userNotesCollection.createIndex(
 		{ user_id: 1, store_id: 1 },
-		{ unique: true }
+		{ unique: true },
 	);
 
 	console.log("Indexes created");

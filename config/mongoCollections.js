@@ -1,7 +1,7 @@
 import { dbConnection } from "./mongoConnection.js";
 
 const getCollectionFn = (collection) => {
-	let _col = undefined;
+	let _col;
 
 	return async () => {
 		if (!_col) {
