@@ -1,0 +1,14 @@
+<h1>Boba Stores</h1>
+
+{{#if stores}}
+	<ul class="store-list">
+		{{#each stores}}
+			<li class="store-item">
+				<div class="store-name">{{this.name}}</div>
+				<div class="store-address">{{this.address.street}}, {{this.address.city}}, {{this.address.state}} {{this.address.zip}}</div>
+			</li>
+		{{/each}}
+	</ul>
+{{else}}
+	<p>No stores found.</p>
+{{/if}}

@@ -1,6 +1,7 @@
 import express from "express";
 import exphbs from "express-handlebars";
 import bobaRoutes from "./routes/boba.js";
+import bobaService from "./data/boba.js";
 
 const app = express();
 
@@ -16,8 +17,18 @@ app.set("view engine", "handlebars");
 // Routes
 app.use("/api/stores", bobaRoutes);
 
-app.get("/", (req, res) => {
-	res.send("Hello World");
+app.get("/", async (req, res) => {
+	try {
+		const { stores } = await bobaService.getAll();
+		res.render("home", { title: "Boba Tracker", stores });
+	} catch (e) {
+		console.error(e);
+		res.render("home", { title: "Boba Tracker", stores: [] });
+	}
+});
+
+app.get("/about", (req, res) => {
+	res.render("about", { title: "About - Boba Tracker" });
 });
 
 // Start server
