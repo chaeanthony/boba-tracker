@@ -1,5 +1,6 @@
 import express from "express";
 import exphbs from "express-handlebars";
+import bobaRoutes from "./routes/boba.js";
 
 const app = express();
 
@@ -13,6 +14,8 @@ app.engine("handlebars", exphbs.engine({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
 // Routes
+app.use("/api/stores", bobaRoutes);
+
 app.get("/", (req, res) => {
 	res.send("Hello World");
 });
