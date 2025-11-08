@@ -13,5 +13,7 @@ const getCollectionFn = (collection) => {
 	};
 };
 
-export const shops = getCollectionFn("boba");
+export const users = getCollectionFn("users");
+export const boba = getCollectionFn("boba");
 export const reviews = getCollectionFn("reviews");
+export const userNotes = getCollectionFn("user_notes");
