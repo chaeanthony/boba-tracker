@@ -3,7 +3,7 @@ import express from "express";
 const router = express.Router();
 
 import bobaService from "../data/boba.js";
-import { NotFoundError } from "../errors.js";
+import { NotFoundError, ValidationError } from "../errors.js";
 
 router.route("/").get(async (req, res) => {
 	try {
