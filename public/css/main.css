@@ -9,6 +9,11 @@ ol {
 	list-style: none;
 }
 
+a {
+	text-decoration: none;
+	color: black;
+}
+
 body {
 	font-family: Arial, sans-serif;
 	line-height: 1.6;
