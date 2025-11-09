@@ -25,6 +25,14 @@ router.route("/").get(async (req, res) => {
 			return res.status(404).json({ error: e.message });
 		}
 
+		if (e instanceof ValidationError) {
+			return res.status(400).json({ error: e.message });
+		}
+
+		return res.status(500).json({ error: "Internal server error" });
+	}
+});
+
 		return res.status(500).json({ error: "Internal server error" });
 	}
 });
