@@ -2,6 +2,7 @@ import express from "express";
 import exphbs from "express-handlebars";
 import bobaService from "./data/boba.js";
 import bobaRoutes from "./routes/boba.js";
+import { NotFoundError, ValidationError } from "./errors.js";
 
 const app = express();
 
@@ -23,7 +24,7 @@ app.get("/", async (_req, res) => {
 		res.render("home", { title: "Boba Tracker", stores });
 	} catch (e) {
 		console.error(e);
-		res.render("home", { title: "Boba Tracker", stores: [] });
+		res.render("error", { errorMessage: "Uh oh, something went wrong. Please try again later." });
 	}
 });
 
