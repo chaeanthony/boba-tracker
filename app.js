@@ -32,6 +32,37 @@ app.get("/about", (_req, res) => {
 	res.render("about", { title: "About - Boba Tracker" });
 });
 
+app.get("/stores/:id", async (req, res) => {
+	try {
+		const store = await bobaService.getById(req.params.id);
+		res.render("store-detail", {
+			title: `${store.name}`,
+			store,
+		});
+	} catch (e) {
+		console.error(e);
+
+		if (e instanceof NotFoundError) {
+			return res.status(404).render("error", {
+				title: "Boba Store Not Found",
+				errorMessage: "Uh oh, we couldn't find this boba store.",
+			});
+		}
+
+		if (e instanceof ValidationError) {
+			return res.status(400).render("error", {
+				title: "Invalid Request",
+				errorMessage: "Uh oh, we couldn't process your request.",
+			});
+		}
+
+		return res.status(500).render("error", {
+			title: "Error",
+			errorMessage: "Uh oh, something went wrong. Please try again later.",
+		});
+	}
+});
+
 // Start server
 app.listen(3000, () => {
 	console.log("Server running on http://localhost:3000");

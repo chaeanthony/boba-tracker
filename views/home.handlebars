@@ -4,8 +4,10 @@
 	<ul class="store-list">
 		{{#each stores}}
 			<li class="store-item">
-				<div class="store-name">{{this.name}}</div>
-				<div class="store-address">{{this.address.street}}, {{this.address.city}}, {{this.address.state}} {{this.address.zip}}</div>
+				<a href="/stores/{{this._id}}">
+					<div class="store-name">{{this.name}}</div>
+					<div class="store-address">{{this.address.street}}, {{this.address.city}}, {{this.address.state}} {{this.address.zip}}</div>
+				</a>
 			</li>
 		{{/each}}
 	</ul>
