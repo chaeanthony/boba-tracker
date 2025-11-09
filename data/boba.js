@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { boba } from "../config/mongoCollections.js";
-import { NotFoundError } from "../errors.js";
+import { NotFoundError, ValidationError } from "../errors.js";
 
 const maxPerPage = 100;
 
