@@ -7,13 +7,10 @@ import { NotFoundError } from "../errors.js";
 
 router.route("/").get(async (req, res) => {
 	try {
-		const page = Math.max(1, parseInt(req.query.page, 10) || 1);
-		const perPage = Math.max(
-			1,
-			Math.min(100, parseInt(req.query.per_page, 10) || 10),
-		); // 100 is the maximum number of items per page
-
-		const { stores, more } = await bobaService.getAll(page, perPage);
+		const { stores, more, page, perPage } = await bobaService.getAll(
+			req.query.page,
+			req.query.per_page,
+		);
 
 		return res.status(200).json({
 			stores,
