@@ -2,7 +2,7 @@
 	<h1>{{store.name}}</h1>
 
 	{{#if store.address}}
-		<div class="store-section">
+		<div>
 			<h2>Address</h2>
 			<p>
 				{{store.address.street}}<br>
@@ -12,21 +12,21 @@
 	{{/if}}
 
 	{{#if store.website}}
-		<div class="store-section">
+		<div>
 			<h2>Website</h2>
 			<p><a href="{{store.website}}" target="_blank">{{store.website}}</a></p>
 		</div>
 	{{/if}}
 
 	{{#if store.grand_open_date}}
-		<div class="store-section">
+		<div>
 			<h2>Grand Opening Date</h2>
 			<p>{{store.grand_open_date}}</p>
 		</div>
 	{{/if}}
 
 	{{#if store.tags}}
-		<div class="store-section">
+		<div>
 			<h2>Tags</h2>
 			<div class="store-tags">
 				{{#if store.tags.non_dairy}}
