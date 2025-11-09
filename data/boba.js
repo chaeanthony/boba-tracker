@@ -6,13 +6,19 @@ const maxPerPage = 100;
 
 const getAll = async (page = 1, perPage = 10) => {
 	const parsedPage = parseInt(page, 10);
-	if (isNaN(parsedPage) || parsedPage < 1) {
+	if (Number.isNaN(parsedPage) || parsedPage < 1) {
 		throw new ValidationError("page must be a valid integer");
 	}
 
 	const parsedPerPage = parseInt(perPage, 10);
-	if (isNaN(parsedPerPage) || parsedPerPage < 1 || parsedPerPage > maxPerPage) {
-		throw new ValidationError(`per page must be an integer between 1 and ${maxPerPage}`);
+	if (
+		Number.isNaN(parsedPerPage) ||
+		parsedPerPage < 1 ||
+		parsedPerPage > maxPerPage
+	) {
+		throw new ValidationError(
+			`per page must be an integer between 1 and ${maxPerPage}`,
+		);
 	}
 
 	const validatedPage = parsedPage;
