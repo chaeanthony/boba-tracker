@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import { boba } from "../config/mongoCollections.js";
 import { NotFoundError } from "../errors.js";
 
@@ -40,10 +41,26 @@ const getAll = async (page = 1, perPage = 10) => {
 
 	return { stores, more, page: validatedPage, perPage: validatedPerPage };
 };
+
+const getById = async (id) => {
+	if (!id || typeof id !== "string" || !ObjectId.isValid(id)) {
+		throw new ValidationError("invalid ID provided");
+	}
+
+	const bobaCollection = await boba();
+	const store = await bobaCollection.findOne({ _id: new ObjectId(id) });
+
+	if (!store) {
+		throw new NotFoundError(`could not find store with ID ${id}`);
+	}
+
+	store._id = store._id.toString();
+	return store;
 };
 
 const exportedMethods = {
 	getAll,
+	getById,
 };
 
 export default exportedMethods;
