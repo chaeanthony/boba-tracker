@@ -26,15 +26,7 @@ const seedDatabase = async () => {
 
 	console.log("Creating indexes...");
 
-	await usersCollection.createIndex({ username: 1 }, { unique: true });
 	await usersCollection.createIndex({ email: 1 }, { unique: true });
-
-	// want unique google_place_id for each store
-	// sparse index allows multiple stores to have null google_place_id
-	await bobaCollection.createIndex(
-		{ google_place_id: 1 },
-		{ unique: true, sparse: true },
-	);
 
 	// should only be one note per user per store
 	await userNotesCollection.createIndex(
@@ -44,19 +36,22 @@ const seedDatabase = async () => {
 
 	console.log("Indexes created");
 
-	// Seed admin user
 	console.log("Seeding users...");
-	const adminUser = {
-		username: "admin",
+	await usersCollection.insertOne({
 		email: "admin@bobatracker.com",
 		display_name: "Admin User",
 		is_admin: true,
 		created_at: new Date(),
 		updated_at: new Date(),
-	};
+	});
 
-	const adminResult = await usersCollection.insertOne(adminUser);
-	console.log(`Admin user created with ID: ${adminResult.insertedId}`);
+	await usersCollection.insertOne({
+		email: "test@bobatracker.com",
+		display_name: "Test User 1",
+		is_admin: false,
+		created_at: new Date(),
+		updated_at: new Date(),
+	});
 
 	console.log("Seeding boba stores...");
 
