@@ -15,7 +15,9 @@
 	"type": "module",
 	"main": "app.js",
 	"scripts": {
-		"start": "node app.js",
+		"dev": "node --env-file=.env --watch app.js",
+		"start": "node --env-file=.env app.js",
+		"seed": "node --env-file=.env scripts/seed.js",
 		"test": "node --test",
 		"check": "biome check .",
 		"format": "biome format --write .",
@@ -26,6 +28,7 @@
 	},
 	"dependencies": {
 		"express": "^5.1.0",
-		"express-handlebars": "^8.0.3"
+		"express-handlebars": "^8.0.3",
+		"mongodb": "^6.20.0"
 	}
 }

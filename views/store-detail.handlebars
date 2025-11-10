@@ -1,0 +1,64 @@
+<div>
+	<h1>{{store.name}}</h1>
+
+	{{#if store.address}}
+		<div>
+			<h2>Address</h2>
+			<p>
+				{{store.address.street}} {{store.address.city}}, {{store.address.state}} {{store.address.zip}}
+			</p>
+		</div>
+	{{/if}}
+
+	{{#if store.website}}
+		<div>
+			<h2>Website</h2>
+			<p><a href="{{store.website}}" class="store-link" target="_blank">{{store.website}}</a></p>
+		</div>
+	{{/if}}
+
+	{{#if store.stats.n_ratings}}
+		<div>
+			<h2>Ratings</h2>
+			<p>{{store.stats.avg_rating}} based on {{store.stats.n_ratings}} reviews</p>
+		</div>
+	{{/if}}
+
+	{{#if store.grand_open_date}}
+		<div>
+			<h2>Grand Opening Date</h2>
+			<p>{{formatDate store.grand_open_date}}</p>
+		</div>
+	{{/if}}
+
+	{{#if store.tags}}
+		<div>
+			<h2>Tags</h2>
+			<div>
+				{{#if store.tags.non_dairy}}
+					<span>Non-Dairy Options</span>
+				{{/if}}
+				{{#if store.tags.gluten_free}}
+					<span>Gluten-Free Options</span>
+				{{/if}}
+			</div>
+		</div>
+	{{/if}}
+
+	<div>
+		<h2>Reviews</h2>
+		{{#if reviews.length}}
+			<div>
+				{{#each reviews}}
+					<div class="review-item-container">
+						<div class="review-rating">{{this.rating}}</div>
+						<div class="review-comment">{{this.comment}}</div>
+						<div class="review-date">{{formatDate this.updated_at}}</div>
+					</div>
+				{{/each}}
+			</div>
+		{{else}}
+			<p>No reviews yet. Be the first to review!</p>
+		{{/if}}
+	</div>
+</div>
