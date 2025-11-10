@@ -1,12 +1,11 @@
-<div class="store-detail">
+<div>
 	<h1>{{store.name}}</h1>
 
 	{{#if store.address}}
 		<div>
 			<h2>Address</h2>
 			<p>
-				{{store.address.street}}<br>
-				{{store.address.city}}, {{store.address.state}} {{store.address.zip}}
+				{{store.address.street}} {{store.address.city}}, {{store.address.state}} {{store.address.zip}}
 			</p>
 		</div>
 	{{/if}}
@@ -15,6 +14,13 @@
 		<div>
 			<h2>Website</h2>
 			<p><a href="{{store.website}}" target="_blank">{{store.website}}</a></p>
+		</div>
+	{{/if}}
+
+	{{#if store.stats.n_ratings}}
+		<div>
+			<h2>Ratings</h2>
+			<p>{{store.stats.avg_rating}} based on {{store.stats.n_ratings}} reviews</p>
 		</div>
 	{{/if}}
 
@@ -28,12 +34,12 @@
 	{{#if store.tags}}
 		<div>
 			<h2>Tags</h2>
-			<div class="store-tags">
+			<div>
 				{{#if store.tags.non_dairy}}
-					<span class="store-tag">Non-Dairy Options</span>
+					<span>Non-Dairy Options</span>
 				{{/if}}
 				{{#if store.tags.gluten_free}}
-					<span class="store-tag">Gluten-Free Options</span>
+					<span>Gluten-Free Options</span>
 				{{/if}}
 			</div>
 		</div>

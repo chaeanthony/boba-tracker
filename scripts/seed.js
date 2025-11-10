@@ -62,7 +62,6 @@ const seedDatabase = async () => {
 
 	const stores = [
 		{
-			google_place_id: "gong-cha-hoboken",
 			name: "Gong Cha",
 			address: {
 				street: "527 Washington Street",
@@ -81,8 +80,8 @@ const seedDatabase = async () => {
 				gluten_free: false,
 			},
 			stats: {
-				avg_rating: 0,
-				n_ratings: 0,
+				avg_rating: 4.0,
+				n_ratings: 5,
 				popularity_score: 0,
 				trending_score: 0,
 				updated_at: new Date(),
@@ -91,7 +90,6 @@ const seedDatabase = async () => {
 			updated_at: new Date(),
 		},
 		{
-			google_place_id: "kung-fu-tea-hoboken",
 			name: "Kung Fu Tea",
 			address: {
 				street: "536 Washington Street",
@@ -110,8 +108,8 @@ const seedDatabase = async () => {
 				gluten_free: false,
 			},
 			stats: {
-				avg_rating: 0,
-				n_ratings: 0,
+				avg_rating: 4.5,
+				n_ratings: 1,
 				popularity_score: 0,
 				trending_score: 0,
 				updated_at: new Date(),
@@ -120,36 +118,6 @@ const seedDatabase = async () => {
 			updated_at: new Date(),
 		},
 		{
-			google_place_id: "the-whale-tea-hoboken",
-			name: "The Whale Tea",
-			address: {
-				street: "303B 1st Street",
-				city: "Hoboken",
-				state: "NJ",
-				zip: "07030",
-			},
-			location: {
-				lat: 40.7398,
-				lng: -74.0294,
-			},
-			website: null,
-			grand_open_date: new Date("2022-09-01"),
-			tags: {
-				non_dairy: false,
-				gluten_free: false,
-			},
-			stats: {
-				avg_rating: 0,
-				n_ratings: 0,
-				popularity_score: 0,
-				trending_score: 0,
-				updated_at: new Date(),
-			},
-			created_at: new Date(),
-			updated_at: new Date(),
-		},
-		{
-			google_place_id: "vivi-bubble-tea-hoboken",
 			name: "Vivi Bubble Tea",
 			address: {
 				street: "117 Washington Street",

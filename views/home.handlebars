@@ -1,12 +1,19 @@
 <h1>Boba Stores</h1>
 
 {{#if stores}}
-	<ul class="store-list">
+	<ul>
 		{{#each stores}}
 			<li class="store-item">
 				<a href="/stores/{{this._id}}">
 					<div class="store-name">{{this.name}}</div>
-					<div class="store-address">{{this.address.street}}, {{this.address.city}}, {{this.address.state}} {{this.address.zip}}</div>
+					<div>{{this.address.street}}, {{this.address.city}}, {{this.address.state}} {{this.address.zip}}</div>
+					<div>
+						{{#if this.stats.n_ratings}}
+							{{this.stats.avg_rating}} based on {{this.stats.n_ratings}} reviews
+						{{else}}
+							No reviews yet
+						{{/if}}
+					</div>
 				</a>
 			</li>
 		{{/each}}

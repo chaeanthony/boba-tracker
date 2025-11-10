@@ -42,6 +42,9 @@ const getAll = async (page = 1, perPage = 10) => {
 
 	const stores = bobaList.slice(0, validatedPerPage).map((store) => {
 		store._id = store._id.toString();
+		if (store.stats?.avg_rating) {
+			store.stats.avg_rating = store.stats.avg_rating.toFixed(1);
+		}
 		return store;
 	});
 
@@ -61,6 +64,9 @@ const getById = async (id) => {
 	}
 
 	store._id = store._id.toString();
+	if (store.stats?.avg_rating) {
+		store.stats.avg_rating = store.stats.avg_rating.toFixed(1);
+	}
 	return store;
 };
 
