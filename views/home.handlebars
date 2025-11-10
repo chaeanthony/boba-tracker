@@ -15,6 +15,11 @@
 						{{/if}}
 					</div>
 				</a>
+				{{#if this.website}}
+					<div class="store-website">
+						<a href="{{this.website}}" class="store-link" target="_blank">{{this.website}}</a>
+					</div>
+				{{/if}}
 			</li>
 		{{/each}}
 	</ul>

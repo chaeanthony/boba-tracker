@@ -46,7 +46,7 @@ nav a {
 }
 
 nav a:hover {
-	color: green;
+	color: darkorange;
 }
 
 .store-item {
@@ -60,4 +60,16 @@ nav a:hover {
 	font-size: 1.2em;
 	font-weight: bold;
 	margin-bottom: 0.3rem;
+}
+
+.store-link {
+	color: darkgreen;
+}
+
+.store-link:hover {
+	color: darkorange;
+}
+
+.store-website {
+	margin-top: 0.5rem;
 }
