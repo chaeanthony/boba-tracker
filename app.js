@@ -1,6 +1,7 @@
 import express from "express";
 import exphbs from "express-handlebars";
 import bobaService from "./data/boba.js";
+import reviewsService from "./data/reviews.js";
 import { NotFoundError, ValidationError } from "./errors.js";
 import bobaRoutes from "./routes/boba.js";
 
@@ -12,7 +13,22 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/public", express.static("public"));
 
 // Handlebars setup
-app.engine("handlebars", exphbs.engine({ defaultLayout: "main" }));
+app.engine(
+	"handlebars",
+	exphbs.engine({
+		defaultLayout: "main",
+		helpers: {
+			formatDate: (date) => {
+				if (!date) return "";
+				const d = new Date(date);
+				const month = String(d.getMonth() + 1).padStart(2, "0");
+				const day = String(d.getDate()).padStart(2, "0");
+				const year = d.getFullYear();
+				return `${month}-${day}-${year}`;
+			},
+		},
+	}),
+);
 app.set("view engine", "handlebars");
 
 // Routes
@@ -37,9 +53,11 @@ app.get("/about", (_req, res) => {
 app.get("/stores/:id", async (req, res) => {
 	try {
 		const store = await bobaService.getById(req.params.id);
+		const reviews = await reviewsService.getByStoreId(req.params.id);
 		res.render("store-detail", {
 			title: `${store.name}`,
 			store,
+			reviews,
 		});
 	} catch (e) {
 		console.error(e);

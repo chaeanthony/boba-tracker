@@ -73,3 +73,18 @@ nav a:hover {
 .store-website {
 	margin-top: 0.5rem;
 }
+
+.review-item-container {
+	margin-bottom: 0.5rem;
+	padding: 1rem;
+	border-bottom: 1px solid lightgray;
+}
+
+.review-rating {
+	font-size: 1em;
+	font-weight: bold;
+}
+
+.review-date {
+	font-style: italic;
+}
