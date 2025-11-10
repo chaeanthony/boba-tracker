@@ -3,6 +3,7 @@ import express from "express";
 const router = express.Router();
 
 import bobaService from "../data/boba.js";
+import reviewsService from "../data/reviews.js";
 import { NotFoundError, ValidationError } from "../errors.js";
 
 router.route("/").get(async (req, res) => {
@@ -43,6 +44,21 @@ router.route("/:id").get(async (req, res) => {
 		if (e instanceof NotFoundError) {
 			return res.status(404).json({ error: e.message });
 		}
+
+		if (e instanceof ValidationError) {
+			return res.status(400).json({ error: e.message });
+		}
+
+		return res.status(500).json({ error: "Internal server error" });
+	}
+});
+
+router.route("/:id/reviews").get(async (req, res) => {
+	try {
+		const reviews = await reviewsService.getByStoreId(req.params.id);
+		return res.status(200).json({ reviews });
+	} catch (e) {
+		console.error(e);
 
 		if (e instanceof ValidationError) {
 			return res.status(400).json({ error: e.message });
