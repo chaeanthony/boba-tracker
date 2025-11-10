@@ -45,13 +45,25 @@ const seedDatabase = async () => {
 		updated_at: new Date(),
 	});
 
-	await usersCollection.insertOne({
+	const testUser1 = {
 		email: "test@bobatracker.com",
 		display_name: "Test User 1",
 		is_admin: false,
 		created_at: new Date(),
 		updated_at: new Date(),
-	});
+	};
+	const testUser1Result = await usersCollection.insertOne(testUser1);
+	console.log(`Inserted test user 1 with ID: ${testUser1Result.insertedId}`);
+
+	const testUser2 = {
+		email: "test2@bobatracker.com",
+		display_name: "Test User 2",
+		is_admin: false,
+		created_at: new Date(),
+		updated_at: new Date(),
+	};
+	const testUser2Result = await usersCollection.insertOne(testUser2);
+	console.log(`Inserted test user 2 with ID: ${testUser2Result.insertedId}`);
 
 	console.log("Seeding boba stores...");
 
@@ -75,8 +87,8 @@ const seedDatabase = async () => {
 				gluten_free: false,
 			},
 			stats: {
-				avg_rating: 4.0,
-				n_ratings: 5,
+				avg_rating: 0,
+				n_ratings: 0,
 				popularity_score: 0,
 				trending_score: 0,
 				updated_at: new Date(),
@@ -103,8 +115,8 @@ const seedDatabase = async () => {
 				gluten_free: false,
 			},
 			stats: {
-				avg_rating: 4.5,
-				n_ratings: 1,
+				avg_rating: 0,
+				n_ratings: 0,
 				popularity_score: 0,
 				trending_score: 0,
 				updated_at: new Date(),
@@ -145,9 +157,95 @@ const seedDatabase = async () => {
 	const storesResult = await bobaCollection.insertMany(stores);
 	console.log(`Inserted ${storesResult.insertedCount} stores`);
 
+	const gongChaId = storesResult.insertedIds[0];
+	const kungFuTeaId = storesResult.insertedIds[1];
+
+	console.log("Seeding reviews...");
+
+	const reviewsData = [
+		{
+			store_id: gongChaId,
+			user_id: testUser1Result.insertedId,
+			rating: 3,
+			comment: "Good boba",
+			created_at: new Date("2024-01-15"),
+			updated_at: new Date("2024-01-15"),
+		},
+		{
+			store_id: gongChaId,
+			user_id: testUser1Result.insertedId,
+			rating: 4,
+			comment: "unique tea flavor",
+			created_at: new Date("2024-02-10"),
+			updated_at: new Date("2024-02-10"),
+		},
+		{
+			store_id: gongChaId,
+			user_id: testUser1Result.insertedId,
+			rating: 4,
+			comment: "nice",
+			created_at: new Date("2024-03-05"),
+			updated_at: new Date("2024-03-05"),
+		},
+		{
+			store_id: gongChaId,
+			user_id: testUser1Result.insertedId,
+			rating: 5,
+			comment: "yummy",
+			created_at: new Date("2024-04-20"),
+			updated_at: new Date("2024-04-20"),
+		},
+		{
+			store_id: gongChaId,
+			user_id: testUser2Result.insertedId,
+			rating: 4,
+			comment: "good",
+			created_at: new Date("2024-05-12"),
+			updated_at: new Date("2024-05-12"),
+		},
+		// Kung Fu Tea review (1 review, 4.5)
+		{
+			store_id: kungFuTeaId,
+			user_id: testUser1Result.insertedId,
+			rating: 4.5,
+			comment: "cool drinks",
+			created_at: new Date("2024-03-22"),
+			updated_at: new Date("2024-03-22"),
+		},
+	];
+
+	const reviewsResult = await reviewsCollection.insertMany(reviewsData);
+	console.log(`Inserted ${reviewsResult.insertedCount} reviews`);
+
+	// Update store stats based on reviews
+	await bobaCollection.updateOne(
+		{ _id: gongChaId },
+		{
+			$set: {
+				"stats.avg_rating": 4.0,
+				"stats.n_ratings": 5,
+				"stats.updated_at": new Date(),
+			},
+		},
+	);
+
+	await bobaCollection.updateOne(
+		{ _id: kungFuTeaId },
+		{
+			$set: {
+				"stats.avg_rating": 4.5,
+				"stats.n_ratings": 1,
+				"stats.updated_at": new Date(),
+			},
+		},
+	);
+
+	console.log("Updated store stats");
+
 	console.log("Database seeding completed!");
 	console.log(`Total stores: ${await bobaCollection.countDocuments()}`);
 	console.log(`Total users: ${await usersCollection.countDocuments()}`);
+	console.log(`Total reviews: ${await reviewsCollection.countDocuments()}`);
 
 	await closeConnection();
 };
