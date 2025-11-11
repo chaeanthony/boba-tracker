@@ -11,6 +11,13 @@
 		<ul>
 			<li><a href="/">Home</a></li>
 			<li><a href="/about">About</a></li>
+			{{#if currentUser}}
+				<li>Signed in as {{currentUser.email}}</li>
+				<li><a href="/logout">Log out</a></li>
+			{{else}}
+				<li><a href="/login">Log in</a></li>
+				<li><a href="/signup">Sign up</a></li>
+			{{/if}}
 		</ul>
 	</nav>
 

@@ -4,6 +4,8 @@ import bobaService from "./data/boba.js";
 import reviewsService from "./data/reviews.js";
 import { NotFoundError, ValidationError } from "./errors.js";
 import bobaRoutes from "./routes/boba.js";
+import usersRoutes from "./routes/users.js";
+import session from "express-session";
 
 const app = express();
 
@@ -11,6 +13,23 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/public", express.static("public"));
+
+// session middleware
+app.use(
+	session({
+		name: 'connect.sid',
+		secret: process.env.SESSION_SECRET || 'devSecret',
+		resave: false,
+		saveUninitialized: false,
+		cookie: { maxAge: 1000 * 60 * 60 * 24 }, // 1 day
+	}),
+);
+
+// make current user available in templates
+app.use((req, res, next) => {
+	res.locals.currentUser = req.session && req.session.user ? req.session.user : null;
+	next();
+});
 
 // Handlebars setup
 app.engine(
@@ -33,6 +52,7 @@ app.set("view engine", "handlebars");
 
 // Routes
 app.use("/api/stores", bobaRoutes);
+app.use("/", usersRoutes);
 
 app.get("/", async (_req, res) => {
 	try {
