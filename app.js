@@ -104,7 +104,14 @@ app.get("/stores/:id", async (req, res) => {
 	}
 });
 
-// Start server
+// 404 everything else
+app.use((_req, res) => {
+	res.status(404).render("error", {
+		title: "Page Not Found",
+		errorMessage: "Uh oh, we couldn't find that page.",
+	});
+});
+
 app.listen(3000, () => {
 	console.log("Server running on http://localhost:3000");
 });

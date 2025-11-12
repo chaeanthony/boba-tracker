@@ -1,28 +1,30 @@
-<h1>Boba Stores</h1>
+<div class="container">
+	<h1>Boba Stores</h1>
 
-{{#if stores}}
-	<ul>
-		{{#each stores}}
-			<li class="store-item">
-				<a href="/stores/{{this._id}}">
-					<div class="store-name">{{this.name}}</div>
-					<div>{{this.address.street}}, {{this.address.city}}, {{this.address.state}} {{this.address.zip}}</div>
-					<div>
-						{{#if this.stats.n_ratings}}
-							{{this.stats.avg_rating}} based on {{this.stats.n_ratings}} reviews
-						{{else}}
-							No reviews yet
-						{{/if}}
-					</div>
-				</a>
-				{{#if this.website}}
-					<div class="store-website">
-						<a href="{{this.website}}" class="store-link" target="_blank">{{this.website}}</a>
-					</div>
-				{{/if}}
-			</li>
-		{{/each}}
-	</ul>
-{{else}}
-	<p>No stores found.</p>
-{{/if}}
+	{{#if stores}}
+		<ul>
+			{{#each stores}}
+				<li class="store-item">
+					<a href="/stores/{{this._id}}">
+						<div class="store-name">{{this.name}}</div>
+						<div>{{this.address.street}}, {{this.address.city}}, {{this.address.state}} {{this.address.zip}}</div>
+						<div>
+							{{#if this.stats.n_ratings}}
+								{{this.stats.avg_rating}} based on {{this.stats.n_ratings}} reviews
+							{{else}}
+								No reviews yet
+							{{/if}}
+						</div>
+					</a>
+					{{#if this.website}}
+						<div class="store-website">
+							<a href="{{this.website}}" class="store-link" target="_blank">{{this.website}}</a>
+						</div>
+					{{/if}}
+				</li>
+			{{/each}}
+		</ul>
+	{{else}}
+		<p>No stores found.</p>
+	{{/if}}
+</div>
