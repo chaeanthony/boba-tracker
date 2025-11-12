@@ -17,30 +17,24 @@ router.post("/signup", async (req, res) => {
 		const { email, password, confirm } = req.body;
 
 		if (!email || !password || !confirm) {
-			return res
-				.status(400)
-				.render("error", {
-					title: "Invalid",
-					errorMessage: "All fields are required.",
-				});
+			return res.status(400).render("error", {
+				title: "Invalid",
+				errorMessage: "All fields are required.",
+			});
 		}
 
 		if (password !== confirm) {
-			return res
-				.status(400)
-				.render("error", {
-					title: "Invalid",
-					errorMessage: "Passwords do not match.",
-				});
+			return res.status(400).render("error", {
+				title: "Invalid",
+				errorMessage: "Passwords do not match.",
+			});
 		}
 
 		if (typeof password !== "string" || password.length < 6) {
-			return res
-				.status(400)
-				.render("error", {
-					title: "Invalid",
-					errorMessage: "Password must be at least 6 characters.",
-				});
+			return res.status(400).render("error", {
+				title: "Invalid",
+				errorMessage: "Password must be at least 6 characters.",
+			});
 		}
 
 		const hash = await bcrypt.hash(password, SALT_ROUNDS);
@@ -53,12 +47,10 @@ router.post("/signup", async (req, res) => {
 		return res.redirect("/");
 	} catch (e) {
 		console.error(e);
-		return res
-			.status(400)
-			.render("error", {
-				title: "Error",
-				errorMessage: e.message || "Could not create account.",
-			});
+		return res.status(400).render("error", {
+			title: "Error",
+			errorMessage: e.message || "Could not create account.",
+		});
 	}
 });
 
@@ -72,32 +64,26 @@ router.post("/login", async (req, res) => {
 	try {
 		const { email, password } = req.body;
 		if (!email || !password) {
-			return res
-				.status(400)
-				.render("error", {
-					title: "Invalid",
-					errorMessage: "Email and password are required.",
-				});
+			return res.status(400).render("error", {
+				title: "Invalid",
+				errorMessage: "Email and password are required.",
+			});
 		}
 
 		const user = await usersService.getUserByEmail(email);
 		if (!user) {
-			return res
-				.status(401)
-				.render("error", {
-					title: "Unauthorized",
-					errorMessage: "Invalid email or password.",
-				});
+			return res.status(401).render("error", {
+				title: "Unauthorized",
+				errorMessage: "Invalid email or password.",
+			});
 		}
 
 		const match = await bcrypt.compare(password, user.passwordHash);
 		if (!match) {
-			return res
-				.status(401)
-				.render("error", {
-					title: "Unauthorized",
-					errorMessage: "Invalid email or password.",
-				});
+			return res.status(401).render("error", {
+				title: "Unauthorized",
+				errorMessage: "Invalid email or password.",
+			});
 		}
 
 		req.session.user = { _id: user._id, email: user.email };

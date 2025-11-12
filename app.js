@@ -27,8 +27,7 @@ app.use(
 
 // make current user available in templates
 app.use((req, res, next) => {
-	res.locals.currentUser =
-		req.session?.user ? req.session.user : null;
+	res.locals.currentUser = req.session?.user ? req.session.user : null;
 	next();
 });
 
