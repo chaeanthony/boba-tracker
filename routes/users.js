@@ -7,7 +7,7 @@ const router = express.Router();
 const SALT_ROUNDS = 10;
 
 // Render signup form
-router.get("/signup", (req, res) => {
+router.get("/signup", (_req, res) => {
 	res.render("signup", { title: "Sign up" });
 });
 
@@ -17,15 +17,30 @@ router.post("/signup", async (req, res) => {
 		const { email, password, confirm } = req.body;
 
 		if (!email || !password || !confirm) {
-			return res.status(400).render("error", { title: "Invalid", errorMessage: "All fields are required." });
+			return res
+				.status(400)
+				.render("error", {
+					title: "Invalid",
+					errorMessage: "All fields are required.",
+				});
 		}
 
 		if (password !== confirm) {
-			return res.status(400).render("error", { title: "Invalid", errorMessage: "Passwords do not match." });
+			return res
+				.status(400)
+				.render("error", {
+					title: "Invalid",
+					errorMessage: "Passwords do not match.",
+				});
 		}
 
-		if (typeof password !== 'string' || password.length < 6) {
-			return res.status(400).render("error", { title: "Invalid", errorMessage: "Password must be at least 6 characters." });
+		if (typeof password !== "string" || password.length < 6) {
+			return res
+				.status(400)
+				.render("error", {
+					title: "Invalid",
+					errorMessage: "Password must be at least 6 characters.",
+				});
 		}
 
 		const hash = await bcrypt.hash(password, SALT_ROUNDS);
@@ -35,15 +50,20 @@ router.post("/signup", async (req, res) => {
 		// store minimal user info in session
 		req.session.user = { _id: created._id, email: created.email };
 
-		return res.redirect('/');
+		return res.redirect("/");
 	} catch (e) {
 		console.error(e);
-		return res.status(400).render("error", { title: "Error", errorMessage: e.message || "Could not create account." });
+		return res
+			.status(400)
+			.render("error", {
+				title: "Error",
+				errorMessage: e.message || "Could not create account.",
+			});
 	}
 });
 
 // Render login form
-router.get("/login", (req, res) => {
+router.get("/login", (_req, res) => {
 	res.render("login", { title: "Log in" });
 });
 
@@ -52,44 +72,61 @@ router.post("/login", async (req, res) => {
 	try {
 		const { email, password } = req.body;
 		if (!email || !password) {
-			return res.status(400).render("error", { title: "Invalid", errorMessage: "Email and password are required." });
+			return res
+				.status(400)
+				.render("error", {
+					title: "Invalid",
+					errorMessage: "Email and password are required.",
+				});
 		}
 
 		const user = await usersService.getUserByEmail(email);
 		if (!user) {
-			return res.status(401).render("error", { title: "Unauthorized", errorMessage: "Invalid email or password." });
+			return res
+				.status(401)
+				.render("error", {
+					title: "Unauthorized",
+					errorMessage: "Invalid email or password.",
+				});
 		}
 
 		const match = await bcrypt.compare(password, user.passwordHash);
 		if (!match) {
-			return res.status(401).render("error", { title: "Unauthorized", errorMessage: "Invalid email or password." });
+			return res
+				.status(401)
+				.render("error", {
+					title: "Unauthorized",
+					errorMessage: "Invalid email or password.",
+				});
 		}
 
 		req.session.user = { _id: user._id, email: user.email };
-		return res.redirect('/');
+		return res.redirect("/");
 	} catch (e) {
 		console.error(e);
-		return res.status(500).render("error", { title: "Error", errorMessage: "Could not log in." });
+		return res
+			.status(500)
+			.render("error", { title: "Error", errorMessage: "Could not log in." });
 	}
 });
 
 // Logout
-router.get('/logout', (req, res) => {
+router.get("/logout", (req, res) => {
 	req.session.destroy((err) => {
-		if (err) console.error('Session destroy error:', err);
-		res.clearCookie('connect.sid');
-		return res.redirect('/');
+		if (err) console.error("Session destroy error:", err);
+		res.clearCookie("connect.sid");
+		return res.redirect("/");
 	});
 });
 
 // Middleware to require a logged in user for protected routes
 export function requireLogin(req, res, next) {
-	if (req.session && req.session.user) return next();
+	if (req.session?.user) return next();
 	// if request expects json, return 401, otherwise redirect to login
-	if (req.get('Accept') && req.get('Accept').includes('application/json')) {
-		return res.status(401).json({ error: 'Authentication required' });
+	if (req.get("Accept")?.includes("application/json")) {
+		return res.status(401).json({ error: "Authentication required" });
 	}
-	return res.redirect('/login');
+	return res.redirect("/login");
 }
 
 export default router;
