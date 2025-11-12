@@ -17,8 +17,8 @@ app.use("/public", express.static("public"));
 // session middleware
 app.use(
 	session({
-		name: 'connect.sid',
-		secret: process.env.SESSION_SECRET || 'devSecret',
+		name: "connect.sid",
+		secret: process.env.SESSION_SECRET || "devSecret",
 		resave: false,
 		saveUninitialized: false,
 		cookie: { maxAge: 1000 * 60 * 60 * 24 }, // 1 day
@@ -27,7 +27,8 @@ app.use(
 
 // make current user available in templates
 app.use((req, res, next) => {
-	res.locals.currentUser = req.session && req.session.user ? req.session.user : null;
+	res.locals.currentUser =
+		req.session?.user ? req.session.user : null;
 	next();
 });
 
