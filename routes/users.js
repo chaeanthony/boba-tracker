@@ -1,5 +1,5 @@
-import express from "express";
 import bcrypt from "bcrypt";
+import express from "express";
 import usersService from "../data/users.js";
 
 const router = express.Router();
