@@ -1,7 +1,6 @@
 import express from "express";
 import exphbs from "express-handlebars";
 import session from "express-session";
-import session from "express-session";
 import { SESSION_NAME } from "./config/settings.js";
 import bobaService from "./data/boba.js";
 import reviewsService from "./data/reviews.js";
