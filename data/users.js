@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb";
 import { users } from "../config/mongoCollections.js";
-import { ValidationError, NotFoundError } from "../errors.js";
+import { NotFoundError, ValidationError } from "../errors.js";
+
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const createUser = async (email, passwordHash) => {

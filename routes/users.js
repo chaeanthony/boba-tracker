@@ -1,7 +1,7 @@
-import express from "express";
 import bcrypt from "bcrypt";
-import usersService from "../data/users.js";
+import express from "express";
 import { SESSION_NAME } from "../config/settings.js";
+import usersService from "../data/users.js";
 
 const router = express.Router();
 

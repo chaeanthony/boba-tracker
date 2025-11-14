@@ -1,12 +1,13 @@
 import express from "express";
 import exphbs from "express-handlebars";
+import session from "express-session";
+import session from "express-session";
+import { SESSION_NAME } from "./config/settings.js";
 import bobaService from "./data/boba.js";
 import reviewsService from "./data/reviews.js";
 import { NotFoundError, ValidationError } from "./errors.js";
 import bobaRoutes from "./routes/boba.js";
 import usersRoutes from "./routes/users.js";
-import session from "express-session";
-import { SESSION_NAME } from "./config/settings.js";
 
 const app = express();
 
@@ -53,6 +54,7 @@ app.set("view engine", "handlebars");
 
 // Routes
 app.use("/api/stores", bobaRoutes);
+app.use("/", usersRoutes);
 app.use("/", usersRoutes);
 
 app.get("/", async (_req, res) => {
