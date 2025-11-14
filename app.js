@@ -6,6 +6,7 @@ import { NotFoundError, ValidationError } from "./errors.js";
 import bobaRoutes from "./routes/boba.js";
 import usersRoutes from "./routes/users.js";
 import session from "express-session";
+import { SESSION_NAME } from "./config/settings.js";
 
 const app = express();
 
@@ -17,7 +18,7 @@ app.use("/public", express.static("public"));
 // session middleware
 app.use(
 	session({
-		name: "connect.sid",
+		name: SESSION_NAME,
 		secret: process.env.SESSION_SECRET || "devSecret",
 		resave: false,
 		saveUninitialized: false,
@@ -27,8 +28,7 @@ app.use(
 
 // make current user available in templates
 app.use((req, res, next) => {
-	res.locals.currentUser =
-		req.session?.user ? req.session.user : null;
+	res.locals.currentUser = req.session?.user ? req.session.user : null;
 	next();
 });
 

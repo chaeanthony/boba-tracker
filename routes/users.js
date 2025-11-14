@@ -1,9 +1,11 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import usersService from "../data/users.js";
+import { SESSION_NAME } from "../config/settings.js";
 
 const router = express.Router();
 
+// Number of salt rounds to use when hashing passwords with bcrypt.
 const SALT_ROUNDS = 10;
 
 // Render signup form
@@ -14,38 +16,39 @@ router.get("/signup", (_req, res) => {
 // Handle signup
 router.post("/signup", async (req, res) => {
 	try {
-		const { email, password, confirm } = req.body;
+		const { email, password, confirmPassword } = req.body;
 
-		if (!email || !password || !confirm) {
-			return res
-				.status(400)
-				.render("error", {
-					title: "Invalid",
-					errorMessage: "All fields are required.",
-				});
+		// only perform basic type and trim checks here
+		if (
+			typeof email !== "string" ||
+			typeof password !== "string" ||
+			typeof confirmPassword !== "string"
+		) {
+			return res.status(400).render("error", {
+				title: "Invalid",
+				errorMessage: "All fields are required.",
+			});
 		}
 
-		if (password !== confirm) {
-			return res
-				.status(400)
-				.render("error", {
-					title: "Invalid",
-					errorMessage: "Passwords do not match.",
-				});
+		const trimmedEmail = email.trim();
+		const trimmedPassword = password.trim();
+		const trimmedConfirm = confirmPassword.trim();
+
+		if (
+			trimmedEmail.length === 0 ||
+			trimmedPassword.length === 0 ||
+			trimmedConfirm.length === 0
+		) {
+			return res.status(400).render("error", {
+				title: "Invalid",
+				errorMessage: "All fields are required.",
+			});
 		}
 
-		if (typeof password !== "string" || password.length < 6) {
-			return res
-				.status(400)
-				.render("error", {
-					title: "Invalid",
-					errorMessage: "Password must be at least 6 characters.",
-				});
-		}
+		// Note: no password length or equality checks here per request — data layer will enforce deeper validation if needed
+		const hash = await bcrypt.hash(trimmedPassword, SALT_ROUNDS);
 
-		const hash = await bcrypt.hash(password, SALT_ROUNDS);
-
-		const created = await usersService.createUser(email, hash);
+		const created = await usersService.createUser(trimmedEmail, hash);
 
 		// store minimal user info in session
 		req.session.user = { _id: created._id, email: created.email };
@@ -53,12 +56,10 @@ router.post("/signup", async (req, res) => {
 		return res.redirect("/");
 	} catch (e) {
 		console.error(e);
-		return res
-			.status(400)
-			.render("error", {
-				title: "Error",
-				errorMessage: e.message || "Could not create account.",
-			});
+		return res.status(400).render("error", {
+			title: "Error",
+			errorMessage: e.message || "Could not create account.",
+		});
 	}
 });
 
@@ -71,33 +72,51 @@ router.get("/login", (_req, res) => {
 router.post("/login", async (req, res) => {
 	try {
 		const { email, password } = req.body;
-		if (!email || !password) {
-			return res
-				.status(400)
-				.render("error", {
-					title: "Invalid",
-					errorMessage: "Email and password are required.",
-				});
+
+		// basic type + trim checks
+		if (typeof email !== "string" || typeof password !== "string") {
+			return res.status(400).render("error", {
+				title: "Invalid",
+				errorMessage: "Email and password are required.",
+			});
 		}
 
-		const user = await usersService.getUserByEmail(email);
+		const trimmedEmail = email.trim();
+		const trimmedPassword = password.trim();
+
+		if (trimmedEmail.length === 0 || trimmedPassword.length === 0) {
+			return res.status(400).render("error", {
+				title: "Invalid",
+				errorMessage: "Email and password are required.",
+			});
+		}
+
+		let user;
+		try {
+			user = await usersService.getUserByEmail(trimmedEmail);
+		} catch (err) {
+			if (err?.name === "NotFoundError" || err?.message === "User not found") {
+				// treat missing user as invalid credentials
+				return res.status(401).render("error", {
+					title: "Unauthorized",
+					errorMessage: "Invalid email or password.",
+				});
+			}
+			throw err;
+		}
 		if (!user) {
-			return res
-				.status(401)
-				.render("error", {
-					title: "Unauthorized",
-					errorMessage: "Invalid email or password.",
-				});
+			return res.status(401).render("error", {
+				title: "Unauthorized",
+				errorMessage: "Invalid email or password.",
+			});
 		}
 
-		const match = await bcrypt.compare(password, user.passwordHash);
+		const match = await bcrypt.compare(trimmedPassword, user.passwordHash);
 		if (!match) {
-			return res
-				.status(401)
-				.render("error", {
-					title: "Unauthorized",
-					errorMessage: "Invalid email or password.",
-				});
+			return res.status(401).render("error", {
+				title: "Unauthorized",
+				errorMessage: "Invalid email or password.",
+			});
 		}
 
 		req.session.user = { _id: user._id, email: user.email };
@@ -114,7 +133,7 @@ router.post("/login", async (req, res) => {
 router.get("/logout", (req, res) => {
 	req.session.destroy((err) => {
 		if (err) console.error("Session destroy error:", err);
-		res.clearCookie("connect.sid");
+		res.clearCookie(SESSION_NAME);
 		return res.redirect("/");
 	});
 });
