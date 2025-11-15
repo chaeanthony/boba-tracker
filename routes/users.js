@@ -5,8 +5,6 @@ import usersService from "../data/users.js";
 
 const router = express.Router();
 
-
-
 // Render signup form
 router.get("/signup", (_req, res) => {
 	res.render("signup", { title: "Sign up" });
@@ -91,18 +89,18 @@ router.post("/login", async (req, res) => {
 		try {
 			user = await usersService.getUserByEmail(trimmedEmail);
 		} catch (e) {
-        console.error(e);
-    
-        if (e instanceof NotFoundError) {
-          return res.status(404).json({ error: e.message });
-        }
-    
-        if (e instanceof ValidationError) {
-          return res.status(400).json({ error: e.message });
-        }
-    
-        return res.status(500).json({ error: "Internal server error" });
-      }
+			console.error(e);
+
+			if (e instanceof NotFoundError) {
+				return res.status(404).json({ error: e.message });
+			}
+
+			if (e instanceof ValidationError) {
+				return res.status(400).json({ error: e.message });
+			}
+
+			return res.status(500).json({ error: "Internal server error" });
+		}
 		if (!user) {
 			return res.status(401).render("error", {
 				title: "Unauthorized",
