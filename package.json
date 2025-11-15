@@ -15,14 +15,14 @@
 	"type": "module",
 	"main": "app.js",
 	"scripts": {
-		"dev": "node --env-file=.env --watch app.js",
-		"start": "node --env-file=.env app.js",
-		"seed": "node --env-file=.env scripts/seed.js",
-		"test": "node --test",
-		"check": "biome check .",
-		"format": "biome format --write .",
-		"lint": "biome lint ."
-	},
+  "dev": "node --watch app.js",
+  "start": "node app.js",
+  "seed": "node scripts/seed.js",
+  "test": "node --test",
+  "check": "biome check .",
+  "format": "biome format --write .",
+  "lint": "biome lint ."
+},
 	"devDependencies": {
 		"@biomejs/biome": "^2.2.6"
 	},
