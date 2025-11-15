@@ -26,3 +26,13 @@ export const validateId = (id) => {
 
     return trimmedId;
 };
+
+export const validatePassword = (password) => {
+    if (typeof password !== "string")
+        throw new ValidationError("password must be a non-empty string");
+    const trimmedPassword = password.trim();
+    if (trimmedPassword.length < 6)
+        throw new ValidationError("password must be at least 6 characters long");
+
+    return trimmedPassword;
+};
