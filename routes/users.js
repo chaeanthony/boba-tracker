@@ -5,8 +5,7 @@ import usersService from "../data/users.js";
 
 const router = express.Router();
 
-// Number of salt rounds to use when hashing passwords with bcrypt.
-const SALT_ROUNDS = 10;
+
 
 // Render signup form
 router.get("/signup", (_req, res) => {
@@ -45,10 +44,7 @@ router.post("/signup", async (req, res) => {
 			});
 		}
 
-		// Note: no password length or equality checks here per request — data layer will enforce deeper validation if needed
-		const hash = await bcrypt.hash(trimmedPassword, SALT_ROUNDS);
-
-		const created = await usersService.createUser(trimmedEmail, hash);
+		const created = await usersService.createUser(trimmedEmail, password);
 
 		// store minimal user info in session
 		req.session.user = { _id: created._id, email: created.email };
@@ -94,16 +90,19 @@ router.post("/login", async (req, res) => {
 		let user;
 		try {
 			user = await usersService.getUserByEmail(trimmedEmail);
-		} catch (err) {
-			if (err?.name === "NotFoundError" || err?.message === "User not found") {
-				// treat missing user as invalid credentials
-				return res.status(401).render("error", {
-					title: "Unauthorized",
-					errorMessage: "Invalid email or password.",
-				});
-			}
-			throw err;
-		}
+		} catch (e) {
+        console.error(e);
+    
+        if (e instanceof NotFoundError) {
+          return res.status(404).json({ error: e.message });
+        }
+    
+        if (e instanceof ValidationError) {
+          return res.status(400).json({ error: e.message });
+        }
+    
+        return res.status(500).json({ error: "Internal server error" });
+      }
 		if (!user) {
 			return res.status(401).render("error", {
 				title: "Unauthorized",
