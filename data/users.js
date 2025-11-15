@@ -2,15 +2,14 @@ import bcrypt from "bcrypt";
 import { ObjectId } from "mongodb";
 import { users } from "../config/mongoCollections.js";
 import { NotFoundError, ValidationError } from "../errors.js";
-import { emailCheck, idCheck } from "../helpers.js";
+import { validateEmail, validateId } from "../helpers.js";
 
 // Salt is a random string added to the password before hashing. Its purpose is to ensure that identical passwords result in different hashes, and more
 const SALT_ROUNDS = 10;
 
 const createUser = async (email, password) => {
 	// normalize and validate email
-	emailCheck(email);
-	const normalizedEmail = email.trim().toLowerCase();
+	const normalizedEmail = validateEmail(email);
 	const trimmedPassword = password.trim();
 	const passwordHash = await bcrypt.hash(trimmedPassword, SALT_ROUNDS);
 	if (typeof passwordHash !== "string")
@@ -50,8 +49,7 @@ const createUser = async (email, password) => {
 };
 
 const getUserByEmail = async (email) => {
-	emailCheck(email);
-	const normalizedEmail = email.trim().toLowerCase();
+	const normalizedEmail = validateEmail(email);
 
 	const usersCollection = await users();
 	const user = await usersCollection.findOne({ email: normalizedEmail });
@@ -62,8 +60,7 @@ const getUserByEmail = async (email) => {
 
 const getUserById = async (id) => {
 	// validate and normalize id string
-	idCheck(id);
-	const trimmedId = id.trim();
+	const trimmedId = validateId(id);
 
 	const usersCollection = await users();
 	const user = await usersCollection.findOne({ _id: new ObjectId(trimmedId) });
