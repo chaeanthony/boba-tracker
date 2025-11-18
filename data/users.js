@@ -32,7 +32,6 @@ const createUser = async (email, password, displayName) => {
 	const newUser = {
 		email: normalizedEmail,
 		displayName: trimmedDisplayName,
-		is_admin: false,
 		passwordHash,
 		createdAt: new Date(),
 	};
@@ -49,7 +48,6 @@ const createUser = async (email, password, displayName) => {
 		_id: newUser._id,
 		email: newUser.email,
 		display_name: newUser.displayName,
-		is_admin: newUser.is_admin,
 		created_at: newUser.createdAt,
 	};
 };

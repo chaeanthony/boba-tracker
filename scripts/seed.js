@@ -40,7 +40,6 @@ const seedDatabase = async () => {
 	await usersCollection.insertOne({
 		email: "admin@bobatracker.com",
 		display_name: "Admin User",
-		is_admin: true,
 		created_at: new Date(),
 		updated_at: new Date(),
 	});
@@ -48,7 +47,6 @@ const seedDatabase = async () => {
 	const testUser1 = {
 		email: "test@bobatracker.com",
 		display_name: "Test User 1",
-		is_admin: false,
 		created_at: new Date(),
 		updated_at: new Date(),
 	};
@@ -58,7 +56,6 @@ const seedDatabase = async () => {
 	const testUser2 = {
 		email: "test2@bobatracker.com",
 		display_name: "Test User 2",
-		is_admin: false,
 		created_at: new Date(),
 		updated_at: new Date(),
 	};
