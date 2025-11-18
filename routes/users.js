@@ -9,171 +9,174 @@ const router = express.Router();
 
 // Render signup form
 router.get("/signup", (_req, res) => {
-  res.render("signup", { title: "Sign up" });
+	res.render("signup", { title: "Sign up" });
 });
 
 // Handle signup
 router.post("/signup", async (req, res) => {
-  try {
-    const { email, password, confirmPassword } = req.body;
+	try {
+		const { email, password, confirmPassword } = req.body;
 
-    if (
-      typeof email !== "string" ||
-      typeof password !== "string" ||
-      typeof confirmPassword !== "string"
-    ) {
-      return res.status(400).render("error", {
-        title: "Invalid",
-        errorMessage: "All fields are required.",
-      });
-    }
+		// only perform basic type and trim checks here
+		if (
+			typeof email !== "string" ||
+			typeof password !== "string" ||
+			typeof confirmPassword !== "string"
+		) {
+			return res.status(400).render("error", {
+				title: "Invalid",
+				errorMessage: "All fields are required.",
+			});
+		}
 
-    const trimmedEmail = email.trim();
-    const trimmedPassword = password.trim();
-    const trimmedConfirm = confirmPassword.trim();
+		const trimmedEmail = email.trim();
+		const trimmedPassword = password.trim();
+		const trimmedConfirm = confirmPassword.trim();
 
-    if (
-      trimmedEmail.length === 0 ||
-      trimmedPassword.length === 0 ||
-      trimmedConfirm.length === 0
-    ) {
-      return res.status(400).render("error", {
-        title: "Invalid",
-        errorMessage: "All fields are required.",
-      });
-    }
+		if (
+			trimmedEmail.length === 0 ||
+			trimmedPassword.length === 0 ||
+			trimmedConfirm.length === 0
+		) {
+			return res.status(400).render("error", {
+				title: "Invalid",
+				errorMessage: "All fields are required.",
+			});
+		}
 
-    const created = await usersService.createUser(trimmedEmail, password);
+		const created = await usersService.createUser(trimmedEmail, password);
 
-    req.session.user = { _id: created._id, email: created.email };
+		// store minimal user info in session
+		req.session.user = { _id: created._id, email: created.email };
 
-    return res.redirect("/");
-  } catch (e) {
-    console.error(e);
-    return res.status(400).render("error", {
-      title: "Error",
-      errorMessage: e.message || "Could not create account.",
-    });
-  }
+		return res.redirect("/");
+	} catch (e) {
+		console.error(e);
+		return res.status(400).render("error", {
+			title: "Error",
+			errorMessage: e.message || "Could not create account.",
+		});
+	}
 });
 
 // Render login form
 router.get("/login", (_req, res) => {
-  res.render("login", { title: "Log in" });
+	res.render("login", { title: "Log in" });
 });
 
 // Handle login
 router.post("/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
+	try {
+		const { email, password } = req.body;
 
-    if (typeof email !== "string" || typeof password !== "string") {
-      return res.status(400).render("error", {
-        title: "Invalid",
-        errorMessage: "Email and password are required.",
-      });
-    }
+		// basic type + trim checks
+		if (typeof email !== "string" || typeof password !== "string") {
+			return res.status(400).render("error", {
+				title: "Invalid",
+				errorMessage: "Email and password are required.",
+			});
+		}
 
-    const trimmedEmail = email.trim();
-    const trimmedPassword = password.trim();
+		const trimmedEmail = email.trim();
+		const trimmedPassword = password.trim();
 
-    if (trimmedEmail.length === 0 || trimmedPassword.length === 0) {
-      return res.status(400).render("error", {
-        title: "Invalid",
-        errorMessage: "Email and password are required.",
-      });
-    }
+		if (trimmedEmail.length === 0 || trimmedPassword.length === 0) {
+			return res.status(400).render("error", {
+				title: "Invalid",
+				errorMessage: "Email and password are required.",
+			});
+		}
 
-    let user;
-    try {
-      user = await usersService.getUserByEmail(trimmedEmail);
-    } catch (e) {
-      console.error(e);
+		let user;
+		try {
+			user = await usersService.getUserByEmail(trimmedEmail);
+		} catch (e) {
+			console.error(e);
 
-      if (e instanceof NotFoundError) {
-        return res.status(404).json({ error: e.message });
-      }
+			if (e instanceof NotFoundError) {
+				return res.status(404).json({ error: e.message });
+			}
 
-      if (e instanceof ValidationError) {
-        return res.status(400).json({ error: e.message });
-      }
+			if (e instanceof ValidationError) {
+				return res.status(400).json({ error: e.message });
+			}
 
-      return res.status(500).json({ error: "Internal server error" });
-    }
+			return res.status(500).json({ error: "Internal server error" });
+		}
+		if (!user) {
+			return res.status(401).render("error", {
+				title: "Unauthorized",
+				errorMessage: "Invalid email or password.",
+			});
+		}
 
-    if (!user) {
-      return res.status(401).render("error", {
-        title: "Unauthorized",
-        errorMessage: "Invalid email or password.",
-      });
-    }
+		const match = await bcrypt.compare(trimmedPassword, user.passwordHash);
+		if (!match) {
+			return res.status(401).render("error", {
+				title: "Unauthorized",
+				errorMessage: "Invalid email or password.",
+			});
+		}
 
-    const match = await bcrypt.compare(trimmedPassword, user.passwordHash);
-    if (!match) {
-      return res.status(401).render("error", {
-        title: "Unauthorized",
-        errorMessage: "Invalid email or password.",
-      });
-    }
-
-    req.session.user = { _id: user._id, email: user.email };
-    return res.redirect("/");
-  } catch (e) {
-    console.error(e);
-    return res
-      .status(500)
-      .render("error", { title: "Error", errorMessage: "Could not log in." });
-  }
+		req.session.user = { _id: user._id, email: user.email };
+		return res.redirect("/");
+	} catch (e) {
+		console.error(e);
+		return res
+			.status(500)
+			.render("error", { title: "Error", errorMessage: "Could not log in." });
+	}
 });
 
 router.get("/profile", requireLogin, async (req, res) => {
-  try {
-    const userId = req.session.user._id;
+	try {
+		const userId = req.session.user._id;
 
-    const userReviews = await reviewsService.getByUserId(userId);
+		// Get all reviews by this user
+		const userReviews = await reviewsService.getByUserId(userId);
 
-    const reviewsWithStores = await Promise.all(
-      userReviews.map(async (review) => {
-        const store = await bobaService.getById(review.storeId);
-        return {
-          ...review,
-          store: store,
-        };
-      }),
-    );
+		// Get store details for each review
+		const reviewsWithStores = await Promise.all(
+			userReviews.map(async (review) => {
+				const store = await bobaService.getById(review.storeId);
+				return {
+					...review,
+					store: store,
+				};
+			}),
+		);
 
-    return res.render("profile", {
-      title: "My Profile",
-      email: req.session.user.email,
-      reviews: reviewsWithStores,
-      reviewCount: userReviews.length,
-    });
-  } catch (_e) {
-    return res.status(500).render("error", {
-      title: "Error",
-      errorMessage: "Could not load profile.",
-    });
-  }
+		return res.render("profile", {
+			title: "My Profile",
+			email: req.session.user.email,
+			reviews: reviewsWithStores,
+			reviewCount: userReviews.length,
+		});
+	} catch (_e) {
+		return res.status(500).render("error", {
+			title: "Error",
+			errorMessage: "Could not load profile.",
+		});
+	}
 });
 
 // Logout
 router.get("/logout", (req, res) => {
-  req.session.destroy((err) => {
-    if (err) console.error("Session destroy error:", err);
-    res.clearCookie(SESSION_NAME);
-    return res.redirect("/");
-  });
+	req.session.destroy((err) => {
+		if (err) console.error("Session destroy error:", err);
+		res.clearCookie(SESSION_NAME);
+		return res.redirect("/");
+	});
 });
 
-// Require login middleware
+// Middleware to require a logged in user for protected routes
 export function requireLogin(req, res, next) {
-  if (req.session?.user) return next();
-
-  if (req.get("Accept")?.includes("application/json")) {
-    return res.status(401).json({ error: "Authentication required" });
-  }
-
-  return res.redirect("/login");
+	if (req.session?.user) return next();
+	// if request expects json, return 401, otherwise redirect to login
+	if (req.get("Accept")?.includes("application/json")) {
+		return res.status(401).json({ error: "Authentication required" });
+	}
+	return res.redirect("/login");
 }
 
 export default router;
