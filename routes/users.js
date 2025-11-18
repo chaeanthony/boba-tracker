@@ -129,35 +129,35 @@ router.post("/login", async (req, res) => {
 });
 
 router.get("/profile", requireLogin, async (req, res) => {
-    try {
-        const userId = req.session.user._id;
+  try {
+    const userId = req.session.user._id;
 
-        // Get all reviews by this user
-        const userReviews = await reviewsService.getByUserId(userId);
+    // Get all reviews by this user
+    const userReviews = await reviewsService.getByUserId(userId);
 
-        // Get store details for each review
-        const reviewsWithStores = await Promise.all(
-            userReviews.map(async (review) => {
-                const store = await bobaService.getById(review.storeId);
-                return {
-                    ...review,
-                    store: store,
-                };
-            }),
-        );
+    // Get store details for each review
+    const reviewsWithStores = await Promise.all(
+      userReviews.map(async (review) => {
+        const store = await bobaService.getById(review.storeId);
+        return {
+          ...review,
+          store: store,
+        };
+      }),
+    );
 
-        return res.render("profile", {
-            title: "My Profile",
-            email: req.session.user.email,
-            reviews: reviewsWithStores,
-            reviewCount: userReviews.length,
-        });
-    } catch (_e) {
-        return res.status(500).render("error", {
-            title: "Error",
-            errorMessage: "Could not load profile.",
-        });
-    }
+    return res.render("profile", {
+      title: "My Profile",
+      email: req.session.user.email,
+      reviews: reviewsWithStores,
+      reviewCount: userReviews.length,
+    });
+  } catch (_e) {
+    return res.status(500).render("error", {
+      title: "Error",
+      errorMessage: "Could not load profile.",
+    });
+  }
 });
 
 
