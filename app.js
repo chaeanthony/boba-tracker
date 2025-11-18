@@ -73,7 +73,7 @@ app.get("/about", (_req, res) => {
 });
 
 app.get("/profile", (_req, res) => {
-	res.render("profile", { title: "User Profile"});
+	res.render("profile", { title: "User Profile" });
 });
 
 app.get("/stores/:id", async (req, res) => {
