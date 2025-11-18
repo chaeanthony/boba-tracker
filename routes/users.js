@@ -128,7 +128,6 @@ router.post("/login", async (req, res) => {
 	}
 });
 
-// Add this route (after login/signup routes, before logout)
 router.get("/profile", requireLogin, async (req, res) => {
 	try {
 		const userId = req.session.user._id;
