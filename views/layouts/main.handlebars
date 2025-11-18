@@ -13,6 +13,7 @@
 			<li><a href="/about">About</a></li>
 			{{#if currentUser}}
 				<li>Signed in as {{currentUser.email}}</li>
+				<li><a href="/profile">Profile</a></li>
 				<li><a href="/logout">Log out</a></li>
 			{{else}}
 				<li><a href="/login">Log in</a></li>

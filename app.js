@@ -72,6 +72,10 @@ app.get("/about", (_req, res) => {
 	res.render("about", { title: "About - Boba Tracker" });
 });
 
+app.get("/profile", (_req, res) => {
+	res.render("profile", { title: "User Profile" });
+});
+
 app.get("/stores/:id", async (req, res) => {
 	try {
 		const store = await bobaService.getById(req.params.id);
