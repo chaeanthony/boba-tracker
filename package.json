@@ -15,22 +15,22 @@
 	"type": "module",
 	"main": "app.js",
 	"scripts": {
-  "dev": "node --watch app.js",
-  "start": "node app.js",
-  "seed": "node scripts/seed.js",
-  "test": "node --test",
-  "check": "biome check .",
-  "format": "biome format --write .",
-  "lint": "biome lint ."
-},
+		"dev": "node --watch app.js",
+		"start": "node app.js",
+		"seed": "node scripts/seed.js",
+		"test": "node --test",
+		"check": "biome check .",
+		"format": "biome format --write .",
+		"lint": "biome lint ."
+	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.2.6"
 	},
 	"dependencies": {
+		"bcrypt": "^5.1.0",
 		"express": "^5.1.0",
 		"express-handlebars": "^8.0.3",
-		"mongodb": "^6.20.0",
-		"bcrypt": "^5.1.0",
-		"express-session": "^1.17.3"
+		"express-session": "^1.18.2",
+		"mongodb": "^6.20.0"
 	}
 }
