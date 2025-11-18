@@ -2,7 +2,12 @@ import bcrypt from "bcrypt";
 import { ObjectId } from "mongodb";
 import { users } from "../config/mongoCollections.js";
 import { NotFoundError, ValidationError } from "../errors.js";
-import { validateEmail, validateId, validatePassword, validateDisplayName } from "../helpers.js";
+import {
+	validateDisplayName,
+	validateEmail,
+	validateId,
+	validatePassword,
+} from "../helpers.js";
 
 // Salt is a random string added to the password before hashing. Its purpose is to ensure that identical passwords result in different hashes, and more
 const SALT_ROUNDS = 10;
