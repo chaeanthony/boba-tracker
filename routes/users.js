@@ -13,13 +13,14 @@ router.get("/signup", (_req, res) => {
 // Handle signup
 router.post("/signup", async (req, res) => {
 	try {
-		const { email, password, confirmPassword } = req.body;
+		const { email, password, confirmPassword, displayName } = req.body;
 
 		// only perform basic type and trim checks here
 		if (
 			typeof email !== "string" ||
 			typeof password !== "string" ||
-			typeof confirmPassword !== "string"
+			typeof confirmPassword !== "string" ||
+      typeof displayName !== "string"
 		) {
 			return res.status(400).render("error", {
 				title: "Invalid",
@@ -30,11 +31,13 @@ router.post("/signup", async (req, res) => {
 		const trimmedEmail = email.trim();
 		const trimmedPassword = password.trim();
 		const trimmedConfirm = confirmPassword.trim();
+    const trimmedDisplayName = displayName.trim();
 
 		if (
 			trimmedEmail.length === 0 ||
 			trimmedPassword.length === 0 ||
-			trimmedConfirm.length === 0
+			trimmedConfirm.length === 0 ||
+      trimmedDisplayName.length === 0
 		) {
 			return res.status(400).render("error", {
 				title: "Invalid",
@@ -42,7 +45,7 @@ router.post("/signup", async (req, res) => {
 			});
 		}
 
-		const created = await usersService.createUser(trimmedEmail, password);
+		const created = await usersService.createUser(trimmedEmail, trimmedPassword, trimmedDisplayName);
 
 		// store minimal user info in session
 		req.session.user = { _id: created._id, email: created.email };

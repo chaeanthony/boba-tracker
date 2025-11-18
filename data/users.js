@@ -2,15 +2,16 @@ import bcrypt from "bcrypt";
 import { ObjectId } from "mongodb";
 import { users } from "../config/mongoCollections.js";
 import { NotFoundError, ValidationError } from "../errors.js";
-import { validateEmail, validateId, validatePassword } from "../helpers.js";
+import { validateEmail, validateId, validatePassword, validateDisplayName } from "../helpers.js";
 
 // Salt is a random string added to the password before hashing. Its purpose is to ensure that identical passwords result in different hashes, and more
 const SALT_ROUNDS = 10;
 
-const createUser = async (email, password) => {
+const createUser = async (email, password, displayName) => {
 	// normalize and validate email and password
 	const normalizedEmail = validateEmail(email);
 	const trimmedPassword = validatePassword(password);
+	const trimmedDisplayName = validateDisplayName(displayName);
 	const passwordHash = await bcrypt.hash(trimmedPassword, SALT_ROUNDS);
 
 	const usersCollection = await users();
@@ -25,6 +26,8 @@ const createUser = async (email, password) => {
 
 	const newUser = {
 		email: normalizedEmail,
+		displayName: trimmedDisplayName,
+		is_admin: false,
 		passwordHash,
 		createdAt: new Date(),
 	};
@@ -40,7 +43,9 @@ const createUser = async (email, password) => {
 	return {
 		_id: newUser._id,
 		email: newUser.email,
-		createdAt: newUser.createdAt,
+		display_name: newUser.displayName,
+		is_admin: newUser.is_admin,
+		created_at: newUser.createdAt,
 	};
 };
 
