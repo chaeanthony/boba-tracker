@@ -12,6 +12,7 @@
 			<li><a href="/">Home</a></li>
 			<li><a href="/about">About</a></li>
 			{{#if currentUser}}
+				<li><a href="/profile">My Profile</a></li>
 				<li>Signed in as {{currentUser.email}}</li>
 				<li><a href="/logout">Log out</a></li>
 			{{else}}
