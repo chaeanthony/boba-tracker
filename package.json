@@ -17,7 +17,7 @@
 	"scripts": {
 		"dev": "node --env-file=.env --watch app.js",
 		"start": "node app.js",
-		"seed": "node --env-file=.env scripts/seed.js",
+		"seed": "node scripts/seed.js",
 		"test": "node --test",
 		"check": "biome check .",
 		"check:fix": "biome check --write .",
