@@ -1,3 +1,27 @@
-<div class="container">
-    <h1>User Profile</h1>
-</div>
+<main class="container">
+    <h1>My Profile</h1>
+    
+    <div class="profile-info">
+        <p><strong>Email:</strong> {{email}}</p>
+        <p><strong>Total Reviews:</strong> {{reviewCount}}</p>
+    </div>
+
+    <h2>My Reviews</h2>
+    
+    {{#if reviews}}
+        <div class="reviews-list">
+            {{#each reviews}}
+                <div class="review-card">
+                    <h3>
+                        <a href="/stores/{{store._id}}">{{store.name}}</a>
+                    </h3>
+                    <p><strong>Rating:</strong> {{rating}}/5 ⭐</p>
+                    <p><strong>Review:</strong> {{comment}}</p>
+                    <p class="review-date">{{updated_at}}</p>
+                </div>
+            {{/each}}
+        </div>
+    {{else}}
+        <p>You haven't reviewed any stores yet. <a href="/">Start exploring!</a></p>
+    {{/if}}
+</main>
