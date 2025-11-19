@@ -2,6 +2,12 @@ import bcrypt from "bcrypt";
 import express from "express";
 import { SESSION_NAME } from "../config/settings.js";
 import usersService from "../data/users.js";
+import {
+	MAX_DISPLAY_NAME_LENGTH,
+	MAX_EMAIL_LENGTH,
+	MAX_PASSWORD_LENGTH,
+	MIN_PASSWORD_LENGTH,
+} from "../helpers.js";
 
 const router = express.Router();
 
@@ -42,6 +48,30 @@ router.post("/signup", async (req, res) => {
 			return res.status(400).render("error", {
 				title: "Invalid",
 				errorMessage: "All fields are required.",
+			});
+		}
+
+		if (trimmedEmail.length > MAX_EMAIL_LENGTH) {
+			return res.status(400).render("error", {
+				title: "Invalid",
+				errorMessage: `Email must be at most ${MAX_EMAIL_LENGTH} characters long.`,
+			});
+		}
+		if (
+			trimmedPassword.length < MIN_PASSWORD_LENGTH ||
+			trimmedPassword.length > MAX_PASSWORD_LENGTH ||
+			trimmedConfirm.length < MIN_PASSWORD_LENGTH ||
+			trimmedConfirm.length > MAX_PASSWORD_LENGTH
+		) {
+			return res.status(400).render("error", {
+				title: "Invalid",
+				errorMessage: `Password must be between ${MIN_PASSWORD_LENGTH} and ${MAX_PASSWORD_LENGTH} characters long.`,
+			});
+		}
+		if (trimmedDisplayName.length > MAX_DISPLAY_NAME_LENGTH) {
+			return res.status(400).render("error", {
+				title: "Invalid",
+				errorMessage: `Display name must be at most ${MAX_DISPLAY_NAME_LENGTH} characters long.`,
 			});
 		}
 

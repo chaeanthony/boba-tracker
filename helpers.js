@@ -1,12 +1,22 @@
 import { ObjectId } from "mongodb";
 import { ValidationError } from "./errors.js";
 
+// Constants
+const MAX_EMAIL_LENGTH = 50;
+const MAX_DISPLAY_NAME_LENGTH = 20;
+const MIN_PASSWORD_LENGTH = 6;
+const MAX_PASSWORD_LENGTH = 20;
+
 export const validateEmail = (email) => {
 	if (typeof email !== "string")
 		throw new ValidationError("Email must be a non-empty string");
 	const normalizedEmail = email.trim().toLowerCase();
 	if (normalizedEmail.length === 0)
 		throw new ValidationError("Email must be a non-empty string");
+	if (normalizedEmail.length > MAX_EMAIL_LENGTH)
+		throw new ValidationError(
+			`Email must be at most ${MAX_EMAIL_LENGTH} characters long`,
+		);
 
 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 	if (!emailRegex.test(normalizedEmail))
@@ -21,6 +31,10 @@ export const validateDisplayName = (displayName) => {
 	const trimmedDisplayName = displayName.trim();
 	if (trimmedDisplayName.length === 0)
 		throw new ValidationError("Display name must be a non-empty string");
+	if (trimmedDisplayName.length > MAX_DISPLAY_NAME_LENGTH)
+		throw new ValidationError(
+			`Display name must be at most ${MAX_DISPLAY_NAME_LENGTH} characters long`,
+		);
 
 	return trimmedDisplayName;
 };
@@ -39,8 +53,14 @@ export const validatePassword = (password) => {
 	if (typeof password !== "string")
 		throw new ValidationError("Password must be a non-empty string");
 	const trimmedPassword = password.trim();
-	if (trimmedPassword.length < 6)
-		throw new ValidationError("Password must be at least 6 characters long");
+	if (trimmedPassword.length < MIN_PASSWORD_LENGTH)
+		throw new ValidationError(
+			`Password must be at least ${MIN_PASSWORD_LENGTH} characters long`,
+		);
+	if (trimmedPassword.length > MAX_PASSWORD_LENGTH)
+		throw new ValidationError(
+			`Password must be at most ${MAX_PASSWORD_LENGTH} characters long`,
+		);
 
 	return trimmedPassword;
 };
