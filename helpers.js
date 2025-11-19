@@ -2,10 +2,10 @@ import { ObjectId } from "mongodb";
 import { ValidationError } from "./errors.js";
 
 // Constants
-const MAX_EMAIL_LENGTH = 50;
-const MAX_DISPLAY_NAME_LENGTH = 20;
-const MIN_PASSWORD_LENGTH = 6;
-const MAX_PASSWORD_LENGTH = 20;
+export const MAX_EMAIL_LENGTH = 50;
+export const MAX_DISPLAY_NAME_LENGTH = 20;
+export const MIN_PASSWORD_LENGTH = 6;
+export const MAX_PASSWORD_LENGTH = 20;
 
 export const validateEmail = (email) => {
 	if (typeof email !== "string")
