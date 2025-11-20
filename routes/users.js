@@ -4,6 +4,12 @@ import { SESSION_NAME } from "../config/settings.js";
 import bobaService from "../data/boba.js";
 import reviewsService from "../data/reviews.js";
 import usersService from "../data/users.js";
+import {
+	MAX_DISPLAY_NAME_LENGTH,
+	MAX_EMAIL_LENGTH,
+	MAX_PASSWORD_LENGTH,
+	MIN_PASSWORD_LENGTH,
+} from "../helpers.js";
 
 const router = express.Router();
 
@@ -15,13 +21,14 @@ router.get("/signup", (_req, res) => {
 // Handle signup
 router.post("/signup", async (req, res) => {
 	try {
-		const { email, password, confirmPassword } = req.body;
+		const { email, password, confirmPassword, displayName } = req.body;
 
 		// only perform basic type and trim checks here
 		if (
 			typeof email !== "string" ||
 			typeof password !== "string" ||
-			typeof confirmPassword !== "string"
+			typeof confirmPassword !== "string" ||
+			typeof displayName !== "string"
 		) {
 			return res.status(400).render("error", {
 				title: "Invalid",
@@ -32,11 +39,13 @@ router.post("/signup", async (req, res) => {
 		const trimmedEmail = email.trim();
 		const trimmedPassword = password.trim();
 		const trimmedConfirm = confirmPassword.trim();
+		const trimmedDisplayName = displayName.trim();
 
 		if (
 			trimmedEmail.length === 0 ||
 			trimmedPassword.length === 0 ||
-			trimmedConfirm.length === 0
+			trimmedConfirm.length === 0 ||
+			trimmedDisplayName.length === 0
 		) {
 			return res.status(400).render("error", {
 				title: "Invalid",
@@ -44,7 +53,35 @@ router.post("/signup", async (req, res) => {
 			});
 		}
 
-		const created = await usersService.createUser(trimmedEmail, password);
+		if (trimmedEmail.length > MAX_EMAIL_LENGTH) {
+			return res.status(400).render("error", {
+				title: "Invalid",
+				errorMessage: `Email must be at most ${MAX_EMAIL_LENGTH} characters long.`,
+			});
+		}
+		if (
+			trimmedPassword.length < MIN_PASSWORD_LENGTH ||
+			trimmedPassword.length > MAX_PASSWORD_LENGTH ||
+			trimmedConfirm.length < MIN_PASSWORD_LENGTH ||
+			trimmedConfirm.length > MAX_PASSWORD_LENGTH
+		) {
+			return res.status(400).render("error", {
+				title: "Invalid",
+				errorMessage: `Password must be between ${MIN_PASSWORD_LENGTH} and ${MAX_PASSWORD_LENGTH} characters long.`,
+			});
+		}
+		if (trimmedDisplayName.length > MAX_DISPLAY_NAME_LENGTH) {
+			return res.status(400).render("error", {
+				title: "Invalid",
+				errorMessage: `Display name must be at most ${MAX_DISPLAY_NAME_LENGTH} characters long.`,
+			});
+		}
+
+		const created = await usersService.createUser(
+			trimmedEmail,
+			trimmedPassword,
+			trimmedDisplayName,
+		);
 
 		// store minimal user info in session
 		req.session.user = { _id: created._id, email: created.email };
