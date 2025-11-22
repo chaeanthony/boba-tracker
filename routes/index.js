@@ -40,6 +40,17 @@ const constructRoutes = (app) => {
 					const year = d.getFullYear();
 					return `${month}-${day}-${year}`;
 				},
+				formatDateTime: (date) => {
+					if (!date) return "";
+					const d = new Date(date);
+					return d.toLocaleString("en-US", {
+						month: "short",
+						day: "numeric",
+						year: "numeric",
+						hour: "numeric",
+						minute: "2-digit",
+					});
+				},
 			},
 		}),
 	);
