@@ -1,5 +1,5 @@
-import cron from "node-cron";
 import express from "express";
+import cron from "node-cron";
 import { calculateTrendingScores } from "./data/scores.js";
 import constructRoutes from "./routes/index.js";
 
