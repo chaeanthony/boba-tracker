@@ -1,9 +1,11 @@
+import cron from "node-cron";
 import express from "express";
 import exphbs from "express-handlebars";
 import session from "express-session";
 import { SESSION_NAME } from "./config/settings.js";
 import bobaService from "./data/boba.js";
 import reviewsService from "./data/reviews.js";
+import { calculateTrendingScores } from "./data/scores.js";
 import { NotFoundError, ValidationError } from "./errors.js";
 import bobaRoutes from "./routes/boba.js";
 import usersRoutes from "./routes/users.js";
@@ -50,6 +52,12 @@ app.engine(
 	}),
 );
 app.set("view engine", "handlebars");
+
+// Cron: recalculate store scores every 5 minutes
+cron.schedule("*/5 * * * *", async () => {
+	console.log("Recalculating store scores...");
+	await calculateTrendingScores();
+});
 
 // Routes
 app.use("/api/stores", bobaRoutes);
