@@ -175,7 +175,7 @@ router.get("/profile", requireLogin, async (req, res) => {
 		// Get store details for each review
 		const reviewsWithStores = await Promise.all(
 			userReviews.map(async (review) => {
-				const store = await bobaService.getById(review.storeId);
+				const store = await bobaService.getById(review.store_id);
 				return {
 					...review,
 					store: store,
