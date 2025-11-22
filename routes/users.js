@@ -213,7 +213,7 @@ export function requireLogin(req, res, next) {
 	if (req.get("Accept")?.includes("application/json")) {
 		return res.status(401).json({ error: "Authentication required" });
 	}
-	return res.redirect("/login");
+	return res.redirect("/users/login");
 }
 
 export default router;
