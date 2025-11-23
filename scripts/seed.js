@@ -147,6 +147,21 @@ const seedDatabase = async () => {
 		},
 	];
 
+	// Generate 12 additional test stores to reach 15 total
+	for (let i = 1; i <= 12; i++) {
+		stores.push({
+			name: `Test Store ${i}`,
+			stats: {
+				avg_rating: 0,
+				n_ratings: 0,
+				trending_score: 0,
+				updated_at: new Date(),
+			},
+			created_at: new Date(),
+			updated_at: new Date(),
+		});
+	}
+
 	const storesResult = await bobaCollection.insertMany(stores);
 	console.log(`Inserted ${storesResult.insertedCount} stores`);
 

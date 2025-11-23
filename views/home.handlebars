@@ -7,7 +7,9 @@
 				<li class="store-item">
 					<a href="/stores/{{this._id}}">
 						<div class="store-name">{{this.name}}</div>
-						<div>{{this.address.street}}, {{this.address.city}}, {{this.address.state}} {{this.address.zip}}</div>
+						{{#if this.address}}
+							<div>{{this.address.street}}, {{this.address.city}}, {{this.address.state}} {{this.address.zip}}</div>
+						{{/if}}
 						<div>
 							{{#if this.stats.n_ratings}}
 								{{this.stats.avg_rating}} based on {{this.stats.n_ratings}} reviews
