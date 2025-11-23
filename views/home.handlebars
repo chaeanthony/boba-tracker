@@ -24,6 +24,20 @@
 				</li>
 			{{/each}}
 		</ul>
+
+		<div class="pagination">
+			{{#if prevPage}}
+				<a href="/?page={{prevPage}}" class="pagination-btn">Previous</a>
+			{{else}}
+				<span class="pagination-btn disabled">Previous</span>
+			{{/if}}
+			<span class="pagination-info">Page {{page}}</span>
+			{{#if nextPage}}
+				<a href="/?page={{nextPage}}" class="pagination-btn">Next</a>
+			{{else}}
+				<span class="pagination-btn disabled">Next</span>
+			{{/if}}
+		</div>
 	{{else}}
 		<p>No stores found.</p>
 	{{/if}}
