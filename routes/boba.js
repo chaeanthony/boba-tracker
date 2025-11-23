@@ -2,6 +2,7 @@ import express from "express";
 import bobaService from "../data/boba.js";
 import reviewsService from "../data/reviews.js";
 import { NotFoundError, ValidationError } from "../errors.js";
+import { VALID_REVIEW_SORTS } from "../helpers.js";
 
 const router = express.Router();
 
@@ -28,8 +29,13 @@ router.get("/stores/:id", async (req, res) => {
 	try {
 		const store = await bobaService.getById(req.params.id);
 		let reviews = await reviewsService.getByStoreId(req.params.id);
-
-		const sort = req.query.sort || "most_recent";
+		// Sort parameter
+		let sort = req.query.sort;
+		// Validate sort parameter
+		if (!VALID_REVIEW_SORTS.includes(sort)) {
+			sort = "most_recent";
+		}
+		// Label to show up in dropdown menu for selected sort
 		let sortLabel = "";
 
 		if (reviews && Array.isArray(reviews)) {

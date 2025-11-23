@@ -6,6 +6,13 @@ export const MAX_EMAIL_LENGTH = 50;
 export const MAX_DISPLAY_NAME_LENGTH = 20;
 export const MIN_PASSWORD_LENGTH = 6;
 export const MAX_PASSWORD_LENGTH = 20;
+// Review sort options
+export const VALID_REVIEW_SORTS = [
+	"most_recent",
+	"least_recent",
+	"highest_rated",
+	"lowest_rated",
+];
 
 export const validateEmail = (email) => {
 	if (typeof email !== "string")
