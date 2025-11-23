@@ -175,7 +175,7 @@ router.get("/profile", requireLogin, async (req, res) => {
 		// Get store details for each review
 		const reviewsWithStores = await Promise.all(
 			userReviews.map(async (review) => {
-				const store = await bobaService.getById(review.storeId);
+				const store = await bobaService.getById(review.store_id);
 				return {
 					...review,
 					store: store,
@@ -213,7 +213,7 @@ export function requireLogin(req, res, next) {
 	if (req.get("Accept")?.includes("application/json")) {
 		return res.status(401).json({ error: "Authentication required" });
 	}
-	return res.redirect("/login");
+	return res.redirect("/users/login");
 }
 
 export default router;
