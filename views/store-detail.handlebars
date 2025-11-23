@@ -1,11 +1,14 @@
-<div class="container">
+<div class='container'>
 	<h1>{{store.name}}</h1>
 
 	{{#if store.address}}
 		<div>
 			<h2>Address</h2>
 			<p>
-				{{store.address.street}} {{store.address.city}}, {{store.address.state}} {{store.address.zip}}
+				{{store.address.street}}
+				{{store.address.city}},
+				{{store.address.state}}
+				{{store.address.zip}}
 			</p>
 		</div>
 	{{/if}}
@@ -13,14 +16,21 @@
 	{{#if store.website}}
 		<div>
 			<h2>Website</h2>
-			<p><a href="{{store.website}}" class="store-link" target="_blank">{{store.website}}</a></p>
+			<p><a
+					href='{{store.website}}'
+					class='store-link'
+					target='_blank'
+				>{{store.website}}</a></p>
 		</div>
 	{{/if}}
 
 	{{#if store.stats.n_ratings}}
 		<div>
 			<h2>Ratings</h2>
-			<p>{{store.stats.avg_rating}} based on {{store.stats.n_ratings}} reviews</p>
+			<p>{{store.stats.avg_rating}}
+				based on
+				{{store.stats.n_ratings}}
+				reviews</p>
 		</div>
 	{{/if}}
 
@@ -48,12 +58,22 @@
 	<div>
 		<h2>Reviews</h2>
 		{{#if reviews.length}}
+			<form>
+				<label for='sort_by'>Sort by: </label>
+				<select id='sort_by' name='sort_by' onchange='location = this.value;'>
+					<option disabled selected>{{this.sortLabel}}</option>
+					<option value='/stores/{{store._id}}?sort=most_recent'>Most Recent</option>
+					<option value='/stores/{{store._id}}?sort=least_recent'>Least Recent</option>
+					<option value='/stores/{{store._id}}?sort=highest_rated'>Highest Rated</option>
+					<option value='/stores/{{store._id}}?sort=lowest_rated'>Lowest Rated</option>
+				</select>
+			</form>
 			<div>
 				{{#each reviews}}
-					<div class="review-item-container">
-						<div class="review-rating">{{this.rating}}</div>
-						<div class="review-comment">{{this.comment}}</div>
-						<div class="review-date">{{formatDate this.updated_at}}</div>
+					<div class='review-item-container'>
+						<div class='review-rating'>{{this.rating}}</div>
+						<div class='review-comment'>{{this.comment}}</div>
+						<div class='review-date'>{{formatDate this.updated_at}}</div>
 					</div>
 				{{/each}}
 			</div>
