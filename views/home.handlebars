@@ -7,7 +7,9 @@
 				<li class="store-item">
 					<a href="/stores/{{this._id}}">
 						<div class="store-name">{{this.name}}</div>
-						<div>{{this.address.street}}, {{this.address.city}}, {{this.address.state}} {{this.address.zip}}</div>
+						{{#if this.address}}
+							<div>{{this.address.street}}, {{this.address.city}}, {{this.address.state}} {{this.address.zip}}</div>
+						{{/if}}
 						<div>
 							{{#if this.stats.n_ratings}}
 								{{this.stats.avg_rating}} based on {{this.stats.n_ratings}} reviews
@@ -24,6 +26,20 @@
 				</li>
 			{{/each}}
 		</ul>
+
+		<div class="pagination">
+			{{#if prevPage}}
+				<a href="/?page={{prevPage}}" class="pagination-btn">Previous</a>
+			{{else}}
+				<span class="pagination-btn disabled">Previous</span>
+			{{/if}}
+			<span class="pagination-info">Page {{page}}</span>
+			{{#if nextPage}}
+				<a href="/?page={{nextPage}}" class="pagination-btn">Next</a>
+			{{else}}
+				<span class="pagination-btn disabled">Next</span>
+			{{/if}}
+		</div>
 	{{else}}
 		<p>No stores found.</p>
 	{{/if}}

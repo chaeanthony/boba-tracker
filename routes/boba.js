@@ -7,10 +7,17 @@ import { VALID_REVIEW_SORTS } from "../helpers.js";
 const router = express.Router();
 
 // Home page - list all stores
-router.get("/", async (_req, res) => {
+router.get("/", async (req, res) => {
 	try {
-		const { stores } = await bobaService.getAll();
-		res.render("home", { title: "Boba Tracker", stores });
+		const page = parseInt(req.query.page, 10) || 1;
+		const { stores, more } = await bobaService.getAll(page);
+		res.render("home", {
+			title: "Boba Tracker",
+			stores,
+			page,
+			prevPage: page > 1 ? page - 1 : null,
+			nextPage: more ? page + 1 : null,
+		});
 	} catch (e) {
 		console.error(e);
 		res.render("error", {

@@ -88,3 +88,30 @@ nav a:hover {
 .review-date {
 	font-style: italic;
 }
+
+.pagination {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	margin-top: 1.5rem;
+}
+
+.pagination-btn {
+	padding: 0.5rem 1rem;
+	border: 1px solid gray;
+	border-radius: 0.25rem;
+	background: #f0f0f0;
+}
+
+.pagination-btn:hover:not(.disabled) {
+	color: darkorange;
+}
+
+.pagination-btn.disabled {
+	color: gray;
+	cursor: not-allowed;
+}
+
+.pagination-info {
+	color: #666;
+}
