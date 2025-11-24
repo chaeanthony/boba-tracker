@@ -2,7 +2,17 @@ import express from "express";
 import bobaService from "../data/boba.js";
 import reviewsService from "../data/reviews.js";
 import { NotFoundError, ValidationError } from "../errors.js";
-import { VALID_REVIEW_SORTS } from "../helpers.js";
+import {
+	REVIEW_SORT_LABELS,
+	SORT_HIGHEST_RATED,
+	SORT_HIGHEST_RATING,
+	SORT_LEAST_RECENT,
+	SORT_LOWEST_RATING,
+	SORT_MOST_RECENT,
+	STORE_SORT_LABELS,
+	VALID_REVIEW_SORTS,
+	VALID_STORE_SORTS,
+} from "../helpers.js";
 
 const router = express.Router();
 
@@ -10,13 +20,27 @@ const router = express.Router();
 router.get("/", async (req, res) => {
 	try {
 		const page = parseInt(req.query.page, 10) || 1;
-		const { stores, more } = await bobaService.getAll(page);
+
+		// Sort parameter
+		let sort = req.query.sort;
+		// Validate sort parameter
+		if (!VALID_STORE_SORTS.includes(sort)) {
+			sort = SORT_HIGHEST_RATED;
+		}
+
+		// Label to show up in dropdown menu for selected sort
+		const sortLabel = STORE_SORT_LABELS[sort];
+
+		const { stores, more } = await bobaService.getAll(page, 10, sort);
+
 		res.render("home", {
 			title: "Boba Tracker",
 			stores,
 			page,
 			prevPage: page > 1 ? page - 1 : null,
 			nextPage: more ? page + 1 : null,
+			sort,
+			sortLabel,
 		});
 	} catch (e) {
 		console.error(e);
@@ -40,34 +64,30 @@ router.get("/stores/:id", async (req, res) => {
 		let sort = req.query.sort;
 		// Validate sort parameter
 		if (!VALID_REVIEW_SORTS.includes(sort)) {
-			sort = "most_recent";
+			sort = SORT_MOST_RECENT;
 		}
 		// Label to show up in dropdown menu for selected sort
-		let sortLabel = "";
+		const sortLabel = REVIEW_SORT_LABELS[sort];
 
 		if (reviews && Array.isArray(reviews)) {
 			reviews = [...reviews];
 
 			switch (sort) {
-				case "least_recent":
+				case SORT_LEAST_RECENT:
 					reviews.sort(
 						(a, b) => new Date(a.updated_at) - new Date(b.updated_at),
 					);
-					sortLabel = "Least Recent";
 					break;
-				case "highest_rated":
+				case SORT_HIGHEST_RATING:
 					reviews.sort((a, b) => b.rating - a.rating);
-					sortLabel = "Highest Rated";
 					break;
-				case "lowest_rated":
+				case SORT_LOWEST_RATING:
 					reviews.sort((a, b) => a.rating - b.rating);
-					sortLabel = "Lowest Rated";
 					break;
 				default:
 					reviews.sort(
 						(a, b) => new Date(b.updated_at) - new Date(a.updated_at),
 					);
-					sortLabel = "Most Recent";
 					break;
 			}
 		}
