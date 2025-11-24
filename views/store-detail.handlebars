@@ -62,10 +62,10 @@
 				<label for='sort_by'>Sort by: </label>
 				<select id='sort_by' name='sort_by' onchange='location = this.value;'>
 					<option disabled selected>{{this.sortLabel}}</option>
-					<option value='/stores/{{store._id}}?sort=SORT_MOST_RECENT'>Most Recent</option>
-					<option value='/stores/{{store._id}}?sort=SORT_LEAST_RECENT'>Least Recent</option>
-					<option value='/stores/{{store._id}}?sort=SORT_HIGHEST_RATING'>Highest Rating</option>
-					<option value='/stores/{{store._id}}?sort=SORT_LOWEST_RATING'>Lowest Rating</option>
+					<option value='/stores/{{store._id}}?sort=most_recent'>Most Recent</option>
+					<option value='/stores/{{store._id}}?sort=least_recent'>Least Recent</option>
+					<option value='/stores/{{store._id}}?sort=highest_rating'>Highest Rating</option>
+					<option value='/stores/{{store._id}}?sort=lowest_rating'>Lowest Rating</option>
 				</select>
 			</form>
 			<div>

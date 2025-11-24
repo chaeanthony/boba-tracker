@@ -1,7 +1,14 @@
 import { ObjectId } from "mongodb";
 import { boba } from "../config/mongoCollections.js";
 import { NotFoundError, ValidationError } from "../errors.js";
-import { VALID_STORE_SORTS } from "../helpers.js";
+import {
+	SORT_HIGHEST_RATED,
+	SORT_LOWEST_RATED,
+	SORT_MOST_REVIEWS,
+	SORT_NEWEST,
+	SORT_TRENDING,
+	VALID_STORE_SORTS,
+} from "../helpers.js";
 
 const maxPerPage = 100;
 
@@ -23,7 +30,7 @@ const getAll = async (page = 1, perPage = 10, sort = "SORT_HIGHEST_RATED") => {
 	}
 
 	if (!VALID_STORE_SORTS.includes(sort)) {
-		sort = "SORT_HIGHEST_RATED";
+		sort = SORT_HIGHEST_RATED;
 	}
 
 	const validatedPage = parsedPage;
@@ -35,16 +42,16 @@ const getAll = async (page = 1, perPage = 10, sort = "SORT_HIGHEST_RATED") => {
 
 	let sortSpecification;
 	switch (sort) {
-		case "SORT_LOWEST_RATED":
+		case SORT_LOWEST_RATED:
 			sortSpecification = { "stats.avg_rating": 1 };
 			break;
-		case "SORT_NEWEST":
+		case SORT_NEWEST:
 			sortSpecification = { "stats.updated_at": -1 };
 			break;
-		case "SORT_TRENDING":
+		case SORT_TRENDING:
 			sortSpecification = { "stats.trending_score": -1 };
 			break;
-		case "SORT_MOST_REVIEWS":
+		case SORT_MOST_REVIEWS:
 			sortSpecification = { "stats.n_ratings": -1 };
 			break;
 		default:

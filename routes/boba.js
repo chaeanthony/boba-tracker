@@ -4,6 +4,11 @@ import reviewsService from "../data/reviews.js";
 import { NotFoundError, ValidationError } from "../errors.js";
 import {
 	REVIEW_SORT_LABELS,
+	SORT_HIGHEST_RATED,
+	SORT_HIGHEST_RATING,
+	SORT_LEAST_RECENT,
+	SORT_LOWEST_RATING,
+	SORT_MOST_RECENT,
 	STORE_SORT_LABELS,
 	VALID_REVIEW_SORTS,
 	VALID_STORE_SORTS,
@@ -20,7 +25,7 @@ router.get("/", async (req, res) => {
 		let sort = req.query.sort;
 		// Validate sort parameter
 		if (!VALID_STORE_SORTS.includes(sort)) {
-			sort = "SORT_HIGHEST_RATED";
+			sort = SORT_HIGHEST_RATED;
 		}
 
 		// Label to show up in dropdown menu for selected sort
@@ -59,7 +64,7 @@ router.get("/stores/:id", async (req, res) => {
 		let sort = req.query.sort;
 		// Validate sort parameter
 		if (!VALID_REVIEW_SORTS.includes(sort)) {
-			sort = "SORT_MOST_RECENT";
+			sort = SORT_MOST_RECENT;
 		}
 		// Label to show up in dropdown menu for selected sort
 		const sortLabel = REVIEW_SORT_LABELS[sort];
@@ -68,15 +73,15 @@ router.get("/stores/:id", async (req, res) => {
 			reviews = [...reviews];
 
 			switch (sort) {
-				case "SORT_LEAST_RECENT":
+				case SORT_LEAST_RECENT:
 					reviews.sort(
 						(a, b) => new Date(a.updated_at) - new Date(b.updated_at),
 					);
 					break;
-				case "SORT_HIGHEST_RATING":
+				case SORT_HIGHEST_RATING:
 					reviews.sort((a, b) => b.rating - a.rating);
 					break;
-				case "SORT_LOWEST_RATING":
+				case SORT_LOWEST_RATING:
 					reviews.sort((a, b) => a.rating - b.rating);
 					break;
 				default:

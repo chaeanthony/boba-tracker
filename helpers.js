@@ -7,34 +7,45 @@ export const MAX_DISPLAY_NAME_LENGTH = 20;
 export const MIN_PASSWORD_LENGTH = 6;
 export const MAX_PASSWORD_LENGTH = 20;
 // Sort Constants
+export const SORT_MOST_RECENT = "most_recent";
+export const SORT_LEAST_RECENT = "least_recent";
+export const SORT_HIGHEST_RATING = "highest_rating";
+export const SORT_LOWEST_RATING = "lowest_rating";
+
 export const VALID_REVIEW_SORTS = [
-	"SORT_HIGHEST_RATING",
-	"SORT_LOWEST_RATING",
-	"SORT_MOST_RECENT",
-	"SORT_LEAST_RECENT",
+	SORT_HIGHEST_RATING,
+	SORT_LOWEST_RATING,
+	SORT_MOST_RECENT,
+	SORT_LEAST_RECENT,
 ];
 
 export const REVIEW_SORT_LABELS = {
-	SORT_MOST_RECENT: "Most Recent",
-	SORT_LEAST_RECENT: "Least Recent",
-	SORT_HIGHEST_RATING: "Highest Rating",
-	SORT_LOWEST_RATING: "Lowest Rating",
+	[SORT_MOST_RECENT]: "Most Recent",
+	[SORT_LEAST_RECENT]: "Least Recent",
+	[SORT_HIGHEST_RATING]: "Highest Rating",
+	[SORT_LOWEST_RATING]: "Lowest Rating",
 };
 
+export const SORT_HIGHEST_RATED = "highest_rated";
+export const SORT_LOWEST_RATED = "lowest_rated";
+export const SORT_TRENDING = "trending";
+export const SORT_MOST_REVIEWS = "most_reviews";
+export const SORT_NEWEST = "newest";
+
 export const VALID_STORE_SORTS = [
-	"SORT_HIGHEST_RATED",
-	"SORT_LOWEST_RATED",
-	"SORT_TRENDING",
-	"SORT_MOST_REVIEWS",
-	"SORT_NEWEST",
+	SORT_HIGHEST_RATED,
+	SORT_LOWEST_RATED,
+	SORT_TRENDING,
+	SORT_MOST_REVIEWS,
+	SORT_NEWEST,
 ];
 
 export const STORE_SORT_LABELS = {
-	SORT_HIGHEST_RATED: "Highest Rated",
-	SORT_LOWEST_RATED: "Lowest Rated",
-	SORT_TRENDING: "Trending",
-	SORT_MOST_REVIEWS: "Most Reviews",
-	SORT_NEWEST: "Newest",
+	[SORT_HIGHEST_RATED]: "Highest Rated",
+	[SORT_LOWEST_RATED]: "Lowest Rated",
+	[SORT_TRENDING]: "Trending",
+	[SORT_MOST_REVIEWS]: "Most Reviews",
+	[SORT_NEWEST]: "Newest",
 };
 
 export const validateEmail = (email) => {
