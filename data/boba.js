@@ -5,7 +5,7 @@ import { VALID_STORE_SORTS } from "../helpers.js";
 
 const maxPerPage = 100;
 
-const getAll = async (page = 1, perPage = 10, sort = "highest_rated") => {
+const getAll = async (page = 1, perPage = 10, sort = "SORT_HIGHEST_RATED") => {
 	const parsedPage = parseInt(page, 10);
 	if (Number.isNaN(parsedPage) || parsedPage < 1) {
 		throw new ValidationError("page must be a valid integer");
@@ -23,7 +23,7 @@ const getAll = async (page = 1, perPage = 10, sort = "highest_rated") => {
 	}
 
 	if (!VALID_STORE_SORTS.includes(sort)) {
-		sort = "highest_rated";
+		sort = "SORT_HIGHEST_RATED";
 	}
 
 	const validatedPage = parsedPage;
@@ -35,13 +35,16 @@ const getAll = async (page = 1, perPage = 10, sort = "highest_rated") => {
 
 	let sortSpecification;
 	switch (sort) {
-		case "newest":
+		case "SORT_LOWEST_RATED":
+			sortSpecification = { "stats.avg_rating": 1 };
+			break;
+		case "SORT_NEWEST":
 			sortSpecification = { "stats.updated_at": -1 };
 			break;
-		case "trending":
+		case "SORT_TRENDING":
 			sortSpecification = { "stats.trending_score": -1 };
 			break;
-		case "most_reviews":
+		case "SORT_MOST_REVIEWS":
 			sortSpecification = { "stats.n_ratings": -1 };
 			break;
 		default:

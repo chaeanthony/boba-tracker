@@ -2,7 +2,12 @@ import express from "express";
 import bobaService from "../data/boba.js";
 import reviewsService from "../data/reviews.js";
 import { NotFoundError, ValidationError } from "../errors.js";
-import { VALID_REVIEW_SORTS, VALID_STORE_SORTS } from "../helpers.js";
+import {
+	REVIEW_SORT_LABELS,
+	STORE_SORT_LABELS,
+	VALID_REVIEW_SORTS,
+	VALID_STORE_SORTS,
+} from "../helpers.js";
 
 const router = express.Router();
 
@@ -15,25 +20,11 @@ router.get("/", async (req, res) => {
 		let sort = req.query.sort;
 		// Validate sort parameter
 		if (!VALID_STORE_SORTS.includes(sort)) {
-			sort = "highest_rated";
+			sort = "SORT_HIGHEST_RATED";
 		}
 
 		// Label to show up in dropdown menu for selected sort
-		let sortLabel = "";
-		switch (sort) {
-			case "newest":
-				sortLabel = "Newest";
-				break;
-			case "trending":
-				sortLabel = "Trending";
-				break;
-			case "most_reviews":
-				sortLabel = "Most Reviews";
-				break;
-			default:
-				sortLabel = "Highest Rated";
-				break;
-		}
+		const sortLabel = STORE_SORT_LABELS[sort];
 
 		const { stores, more } = await bobaService.getAll(page, 10, sort);
 
@@ -68,34 +59,30 @@ router.get("/stores/:id", async (req, res) => {
 		let sort = req.query.sort;
 		// Validate sort parameter
 		if (!VALID_REVIEW_SORTS.includes(sort)) {
-			sort = "most_recent";
+			sort = "SORT_MOST_RECENT";
 		}
 		// Label to show up in dropdown menu for selected sort
-		let sortLabel = "";
+		const sortLabel = REVIEW_SORT_LABELS[sort];
 
 		if (reviews && Array.isArray(reviews)) {
 			reviews = [...reviews];
 
 			switch (sort) {
-				case "least_recent":
+				case "SORT_LEAST_RECENT":
 					reviews.sort(
 						(a, b) => new Date(a.updated_at) - new Date(b.updated_at),
 					);
-					sortLabel = "Least Recent";
 					break;
-				case "highest_rating":
+				case "SORT_HIGHEST_RATING":
 					reviews.sort((a, b) => b.rating - a.rating);
-					sortLabel = "Highest Rating";
 					break;
-				case "lowest_rating":
+				case "SORT_LOWEST_RATING":
 					reviews.sort((a, b) => a.rating - b.rating);
-					sortLabel = "Lowest Rating";
 					break;
 				default:
 					reviews.sort(
 						(a, b) => new Date(b.updated_at) - new Date(a.updated_at),
 					);
-					sortLabel = "Most Recent";
 					break;
 			}
 		}
