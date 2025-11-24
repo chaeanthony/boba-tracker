@@ -12,7 +12,7 @@ import {
 
 const maxPerPage = 100;
 
-const getAll = async (page = 1, perPage = 10, sort = "SORT_HIGHEST_RATED") => {
+const getAll = async (page = 1, perPage = 10, sort = SORT_HIGHEST_RATED) => {
 	const parsedPage = parseInt(page, 10);
 	if (Number.isNaN(parsedPage) || parsedPage < 1) {
 		throw new ValidationError("page must be a valid integer");
