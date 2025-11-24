@@ -181,7 +181,7 @@ const seedDatabase = async () => {
 		{
 			store_id: gongChaId,
 			user_id: user1Id,
-			rating: 5,
+			rating: 3,
 			comment: "delicious!",
 			created_at: daysAgo(1),
 			updated_at: daysAgo(1),
@@ -211,7 +211,7 @@ const seedDatabase = async () => {
 		{
 			store_id: gongChaId,
 			user_id: user2Id,
-			rating: 5,
+			rating: 2,
 			created_at: daysAgo(10),
 			updated_at: daysAgo(10),
 		},
@@ -225,7 +225,7 @@ const seedDatabase = async () => {
 		{
 			store_id: gongChaId,
 			user_id: user2Id,
-			rating: 5,
+			rating: 1,
 			created_at: daysAgo(20),
 			updated_at: daysAgo(20),
 		},
@@ -271,7 +271,7 @@ const seedDatabase = async () => {
 		{
 			store_id: viviId,
 			user_id: user1Id,
-			rating: 2,
+			rating: 4,
 			created_at: daysAgo(12),
 			updated_at: daysAgo(12),
 		},

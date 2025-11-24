@@ -2,7 +2,7 @@ import express from "express";
 import bobaService from "../data/boba.js";
 import reviewsService from "../data/reviews.js";
 import { NotFoundError, ValidationError } from "../errors.js";
-import { VALID_REVIEW_SORTS } from "../helpers.js";
+import { VALID_REVIEW_SORTS, VALID_STORE_SORTS } from "../helpers.js";
 
 const router = express.Router();
 
@@ -10,13 +10,41 @@ const router = express.Router();
 router.get("/", async (req, res) => {
 	try {
 		const page = parseInt(req.query.page, 10) || 1;
-		const { stores, more } = await bobaService.getAll(page);
+
+		// Sort parameter
+		let sort = req.query.sort;
+		// Validate sort parameter
+		if (!VALID_STORE_SORTS.includes(sort)) {
+			sort = "highest_rated";
+		}
+
+		// Label to show up in dropdown menu for selected sort
+		let sortLabel = "";
+		switch (sort) {
+			case "newest":
+				sortLabel = "Newest";
+				break;
+			case "trending":
+				sortLabel = "Trending";
+				break;
+			case "most_reviews":
+				sortLabel = "Most Reviews";
+				break;
+			default:
+				sortLabel = "Highest Rated";
+				break;
+		}
+
+		const { stores, more } = await bobaService.getAll(page, 10, sort);
+
 		res.render("home", {
 			title: "Boba Tracker",
 			stores,
 			page,
 			prevPage: page > 1 ? page - 1 : null,
 			nextPage: more ? page + 1 : null,
+			sort,
+			sortLabel,
 		});
 	} catch (e) {
 		console.error(e);
@@ -55,13 +83,13 @@ router.get("/stores/:id", async (req, res) => {
 					);
 					sortLabel = "Least Recent";
 					break;
-				case "highest_rated":
+				case "highest_rating":
 					reviews.sort((a, b) => b.rating - a.rating);
-					sortLabel = "Highest Rated";
+					sortLabel = "Highest Rating";
 					break;
-				case "lowest_rated":
+				case "lowest_rating":
 					reviews.sort((a, b) => a.rating - b.rating);
-					sortLabel = "Lowest Rated";
+					sortLabel = "Lowest Rating";
 					break;
 				default:
 					reviews.sort(

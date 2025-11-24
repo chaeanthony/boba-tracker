@@ -10,8 +10,14 @@ export const MAX_PASSWORD_LENGTH = 20;
 export const VALID_REVIEW_SORTS = [
 	"most_recent",
 	"least_recent",
+	"highest_rating",
+	"lowest_rating",
+];
+export const VALID_STORE_SORTS = [
 	"highest_rated",
-	"lowest_rated",
+	"trending",
+	"most_reviews",
+	"newest",
 ];
 
 export const validateEmail = (email) => {

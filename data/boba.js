@@ -1,10 +1,11 @@
 import { ObjectId } from "mongodb";
 import { boba } from "../config/mongoCollections.js";
 import { NotFoundError, ValidationError } from "../errors.js";
+import { VALID_STORE_SORTS } from "../helpers.js";
 
 const maxPerPage = 100;
 
-const getAll = async (page = 1, perPage = 10) => {
+const getAll = async (page = 1, perPage = 10, sort = "highest_rated") => {
 	const parsedPage = parseInt(page, 10);
 	if (Number.isNaN(parsedPage) || parsedPage < 1) {
 		throw new ValidationError("page must be a valid integer");
@@ -21,6 +22,10 @@ const getAll = async (page = 1, perPage = 10) => {
 		);
 	}
 
+	if (!VALID_STORE_SORTS.includes(sort)) {
+		sort = "highest_rated";
+	}
+
 	const validatedPage = parsedPage;
 	const validatedPerPage = parsedPerPage;
 
@@ -28,8 +33,25 @@ const getAll = async (page = 1, perPage = 10) => {
 
 	const skip = (validatedPage - 1) * validatedPerPage;
 
+	let sortSpecification;
+	switch (sort) {
+		case "newest":
+			sortSpecification = { "stats.updated_at": -1 };
+			break;
+		case "trending":
+			sortSpecification = { "stats.trending_score": -1 };
+			break;
+		case "most_reviews":
+			sortSpecification = { "stats.n_ratings": -1 };
+			break;
+		default:
+			sortSpecification = { "stats.avg_rating": -1 };
+			break;
+	}
+
 	const bobaList = await bobaCollection
 		.find({})
+		.sort(sortSpecification)
 		.skip(skip)
 		.limit(validatedPerPage + 1)
 		.toArray();

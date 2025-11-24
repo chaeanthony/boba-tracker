@@ -2,6 +2,16 @@
 	<h1>Boba Stores</h1>
 
 	{{#if stores}}
+				<form>
+				<label for='sort_by'>Sort by: </label>
+				<select id='sort_by' name='sort_by' onchange='location = this.value;'>
+					<option disabled selected>{{sortLabel}}</option>
+					<option value='/?sort=highest_rated'>Highest Rated</option>
+					<option value='/?sort=trending'>Trending</option>
+					<option value='/?sort=most_reviews'>Most Reviews</option>
+					<option value='/?sort=newest'>Newest</option>
+				</select>
+			</form>
 		<ul>
 			{{#each stores}}
 				<li class="store-item">
@@ -29,13 +39,13 @@
 
 		<div class="pagination">
 			{{#if prevPage}}
-				<a href="/?page={{prevPage}}" class="pagination-btn">Previous</a>
+				<a href="/?page={{prevPage}}&sort={{sort}}" class="pagination-btn">Previous</a>
 			{{else}}
 				<span class="pagination-btn disabled">Previous</span>
 			{{/if}}
 			<span class="pagination-info">Page {{page}}</span>
 			{{#if nextPage}}
-				<a href="/?page={{nextPage}}" class="pagination-btn">Next</a>
+				<a href="/?page={{nextPage}}&sort={{sort}}" class="pagination-btn">Next</a>
 			{{else}}
 				<span class="pagination-btn disabled">Next</span>
 			{{/if}}
