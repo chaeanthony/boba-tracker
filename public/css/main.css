@@ -116,12 +116,36 @@ nav a:hover {
 	color: #666;
 }
 
-#review-form-container {
-	display: none;
+.reviews-container {
+	display: flex;
+	gap: 3rem;
 }
 
-#review-form-container.show {
-	display: block;
+.reviews-list-section {
+	flex: 2;
+}
+
+.reviews-form-section {
+	flex: 1;
+}
+
+.comment-container {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.reviews-list-header {
+	display: flex;
+	gap: 2rem;
+	align-items: center;
+}
+
+.login-btn {
+	background-color: lightgreen;
+	border-radius: 0.25rem;
+	padding: 0.25rem;
+	border: 1px solid darkgreen;
 }
 
 #comment-input {

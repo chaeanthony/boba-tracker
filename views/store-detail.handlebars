@@ -51,115 +51,106 @@
 	</div>
 	{{/if}}
 
-	{{! My Review Section }}
-	{{#if userReview}}
-	<div>
-		<h2>My Review</h2>
-		<div class='review-item-container'>
-			<div class='review-rating'>{{userReview.rating}}</div>
-			<div class='review-comment'>{{userReview.comment}}</div>
-			<div class='review-date'>{{formatDate userReview.updated_at}}</div>
-		</div>
 
-		{{! Edit Review Form }}
-		<button id='toggle-review-btn' type='button'>Edit My Review</button>
-		<div id='review-form-container'>
-			<form>
-				<input type='hidden' name='store_id' value='{{store._id}}' />
-				<input type='hidden' name='review_id' value='{{userReview._id}}' />
-
-				<div>
-					<label>Rating:</label>
-					<div id='star-rating'>
-						<span class='star' data-rating='1'>★</span>
-						<span class='star' data-rating='2'>★</span>
-						<span class='star' data-rating='3'>★</span>
-						<span class='star' data-rating='4'>★</span>
-						<span class='star' data-rating='5'>★</span>
-					</div>
-					<input type='hidden' id='rating-input' name='rating' value='{{userReview.rating}}' required />
-				</div>
-
-				<div>
-					<label for='comment-input'>Comment:</label>
-					<textarea id='comment-input' name='comment' maxlength='1000'
-						rows='5'>{{userReview.comment}}</textarea>
-					<div id='char-counter'>{{userReview.comment.length}}/1000 characters</div>
-				</div>
-
-				<div>
-					<button type='submit'>Update Review</button>
-					<button type='button' id='cancel-review-btn'>Cancel</button>
-				</div>
-			</form>
-		</div>
-	</div>
-	{{else}}
-	{{#if currentUser}}
-	{{! Create Review Form }}
-	<div>
-		<h2>Write a Review</h2>
-		<button id='toggle-review-btn' type='button'>Add Review</button>
-		<div id='review-form-container'>
-			<form>
-				<input type='hidden' name='store_id' value='{{store._id}}' />
-
-				<div>
-					<label>Rating:</label>
-					<div id='star-rating'>
-						<span class='star' data-rating='1'>★</span>
-						<span class='star' data-rating='2'>★</span>
-						<span class='star' data-rating='3'>★</span>
-						<span class='star' data-rating='4'>★</span>
-						<span class='star' data-rating='5'>★</span>
-					</div>
-					<input type='hidden' id='rating-input' name='rating' required />
-				</div>
-
-				<div>
-					<label for='comment-input'>Comment:</label>
-					<textarea id='comment-input' name='comment' maxlength='1000' rows='5'></textarea>
-					<div id='char-counter'>0/1000 characters</div>
-				</div>
-
-				<div>
-					<button type='submit'>Submit Review</button>
-					<button type='button' id='cancel-review-btn'>Cancel</button>
-				</div>
-			</form>
-		</div>
-	</div>
-	{{else}}
-	<p><a href='/users/login'>Sign in to write a review</a></p>
-	{{/if}}
-	{{/if}}
-
-	{{! All Reviews Section }}
-	<div>
-		<h2>Reviews</h2>
-		{{#if reviews.length}}
-		<form>
-			<label for='sort_by'>Sort by: </label>
-			<select id='sort_by' name='sort_by' onchange='location = this.value;'>
-				<option disabled selected>{{this.sortLabel}}</option>
-				<option value='/stores/{{store._id}}?sort=most_recent'>Most Recent</option>
-				<option value='/stores/{{store._id}}?sort=least_recent'>Least Recent</option>
-				<option value='/stores/{{store._id}}?sort=highest_rating'>Highest Rating</option>
-				<option value='/stores/{{store._id}}?sort=lowest_rating'>Lowest Rating</option>
-			</select>
-		</form>
-		<div>
-			{{#each reviews}}
-			<div class='review-item-container'>
-				<div class='review-rating'>{{this.rating}}</div>
-				<div class='review-comment'>{{this.comment}}</div>
-				<div class='review-date'>{{formatDate this.updated_at}}</div>
+	<div class="reviews-container">
+		<div class="reviews-list-section">
+			<div class="reviews-list-header">
+				<h2>Reviews</h2>
+				{{#unless currentUser}}
+				<button class="login-btn" type="button">
+					<a href='/users/login'>Sign in to write a review</a>
+				</button>
+				{{/unless}}
 			</div>
-			{{/each}}
+			{{#if reviews.length}}
+			<form>
+				<label for='sort_by'>Sort by: </label>
+				<select id='sort_by' name='sort_by' onchange='location = this.value;'>
+					<option disabled selected>{{this.sortLabel}}</option>
+					<option value='/stores/{{store._id}}?sort=most_recent'>Most Recent</option>
+					<option value='/stores/{{store._id}}?sort=least_recent'>Least Recent</option>
+					<option value='/stores/{{store._id}}?sort=highest_rating'>Highest Rating</option>
+					<option value='/stores/{{store._id}}?sort=lowest_rating'>Lowest Rating</option>
+				</select>
+			</form>
+			<div>
+				{{#each reviews}}
+				<div class='review-item-container'>
+					<div class='review-rating'>{{this.rating}}</div>
+					<div class='review-comment'>{{this.comment}}</div>
+					<div class='review-date'>{{formatDate this.updated_at}}</div>
+				</div>
+				{{/each}}
+			</div>
+			{{else}}
+			<p>No reviews yet. Be the first to review!</p>
+			{{/if}}
 		</div>
-		{{else}}
-		<p>No reviews yet. Be the first to review!</p>
-		{{/if}}
+		<div class="reviews-form-section">
+			{{#if userReview}}
+			<div>
+				<h2>My Review</h2>
+				<form id="update-review-form">
+					<input type='hidden' name='store_id' value='{{store._id}}' />
+					<input type='hidden' name='review_id' value='{{userReview._id}}' />
+
+					<div>
+						<label>Rating:</label>
+						<div id='star-rating'>
+							<span class='star' data-rating='1'>★</span>
+							<span class='star' data-rating='2'>★</span>
+							<span class='star' data-rating='3'>★</span>
+							<span class='star' data-rating='4'>★</span>
+							<span class='star' data-rating='5'>★</span>
+						</div>
+						<input type='hidden' id='rating-input' name='rating' value='{{userReview.rating}}' required />
+					</div>
+
+					<div class="comment-container">
+						<label for='comment-input'>Comment:</label>
+						<textarea id='comment-input' name='comment' maxlength='1000'
+							rows='5'>{{userReview.comment}}</textarea>
+						<div id='char-counter'>{{userReview.comment.length}}/1000 characters</div>
+					</div>
+
+					<div>
+						<button type='submit'>Update Review</button>
+					</div>
+				</form>
+			</div>
+			{{else}}
+			{{#if currentUser}}
+			<div>
+				<h2>Write a Review</h2>
+				<form id="create-review-form">
+					<input type='hidden' name='store_id' value='{{store._id}}' />
+
+					<div>
+						<label>Rating:</label>
+						<div id='star-rating'>
+							<span class='star' data-rating='1'>★</span>
+							<span class='star' data-rating='2'>★</span>
+							<span class='star' data-rating='3'>★</span>
+							<span class='star' data-rating='4'>★</span>
+							<span class='star' data-rating='5'>★</span>
+						</div>
+						<input type='hidden' id='rating-input' name='rating' required />
+					</div>
+
+					<div class="comment-container">
+						<label for='comment-input'>Comment:</label>
+						<textarea id='comment-input' name='comment' maxlength='1000' rows='5'></textarea>
+						<div id='char-counter'>0/1000 characters</div>
+					</div>
+
+					<div>
+						<button type='submit'>Submit Review</button>
+					</div>
+				</form>
+			</div>
+			{{/if}}
+			{{/if}}
+		</div>
 	</div>
 </div>
 

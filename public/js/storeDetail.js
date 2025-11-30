@@ -3,10 +3,10 @@ let selectedRating = 0;
 
 // Initialize on page load
 document.addEventListener("DOMContentLoaded", () => {
-	const toggleBtn = document.getElementById("toggle-review-btn");
-	const formContainer = document.getElementById("review-form-container");
-	const form = document.querySelector("#review-form-container form");
-	const cancelBtn = document.getElementById("cancel-review-btn");
+	const updateForm = document.getElementById("update-review-form");
+	const createForm = document.getElementById("create-review-form");
+	const form = updateForm || createForm;
+
 	const stars = document.querySelectorAll(".star");
 	const commentInput = document.getElementById("comment-input");
 	const ratingInput = document.getElementById("rating-input");
@@ -14,20 +14,15 @@ document.addEventListener("DOMContentLoaded", () => {
 	if (!form) return; // No form on page (user not logged in)
 
 	// Get initial rating if editing
-	if (ratingInput.value) {
+	if (ratingInput && ratingInput.value) {
 		selectedRating = parseInt(ratingInput.value, 10);
 		highlightStars(selectedRating);
 	}
 
-	// Toggle form visibility
-	toggleBtn.addEventListener("click", () => {
-		formContainer.classList.toggle("show");
-	});
-
-	// Cancel button
-	cancelBtn.addEventListener("click", () => {
-		formContainer.classList.remove("show");
-	});
+	// Initialize character counter
+	if (commentInput) {
+		updateCharCounter();
+	}
 
 	// Star rating interactions
 	stars.forEach((star) => {
