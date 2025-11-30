@@ -60,7 +60,7 @@ const constructRoutes = (app) => {
 	// Routes
 	app.use("/", bobaRoutes);
 	app.use("/users", usersRoutes);
-	
+
 	// API
 	app.use("/api/reviews", reviewsAPI);
 
