@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	if (!form) return; // No form on page (user not logged in)
 
 	// Get initial rating if editing
-	if (ratingInput && ratingInput.value) {
+	if (ratingInput?.value) {
 		selectedRating = parseInt(ratingInput.value, 10);
 		highlightStars(selectedRating);
 	}
@@ -54,12 +54,10 @@ document.addEventListener("DOMContentLoaded", () => {
 		const reviewIdInput = form.querySelector('input[name="review_id"]');
 		const storeIdInput = form.querySelector('input[name="store_id"]');
 
-		const isEdit = reviewIdInput && reviewIdInput.value;
+		const isEdit = reviewIdInput?.value;
 
 		// Prepare request
-		const url = isEdit
-			? `/api/reviews/${reviewIdInput.value}`
-			: "/api/reviews";
+		const url = isEdit ? `/api/reviews/${reviewIdInput.value}` : "/api/reviews";
 		const method = isEdit ? "PATCH" : "POST";
 		const body = isEdit
 			? { rating: selectedRating, comment }
