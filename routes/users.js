@@ -84,7 +84,11 @@ router.post("/signup", async (req, res) => {
 		);
 
 		// store minimal user info in session
-		req.session.user = { _id: created._id, email: created.email };
+		req.session.user = {
+			_id: created._id,
+			email: created.email,
+			displayName: created.displayName,
+		};
 
 		return res.redirect("/");
 	} catch (e) {
@@ -155,7 +159,11 @@ router.post("/login", async (req, res) => {
 			});
 		}
 
-		req.session.user = { _id: user._id, email: user.email };
+		req.session.user = {
+			_id: user._id,
+			email: user.email,
+			displayName: user.displayName,
+		};
 		return res.redirect("/");
 	} catch (e) {
 		console.error(e);
@@ -183,8 +191,11 @@ router.get("/profile", requireLogin, async (req, res) => {
 			}),
 		);
 
+		//console.log("SESSION USER:", req.session.user);
+
 		return res.render("profile", {
 			title: "My Profile",
+			displayName: req.session.user.displayName,
 			email: req.session.user.email,
 			reviews: reviewsWithStores,
 			reviewCount: userReviews.length,
