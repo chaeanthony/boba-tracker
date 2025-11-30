@@ -58,6 +58,7 @@ router.get("/stores/:id", async (req, res) => {
 	try {
 		const store = await bobaService.getById(req.params.id);
 		const reviews = await reviewsService.getByStoreId(req.params.id);
+
 		// Sort parameter
 		let sort = req.query.sort;
 		// Validate sort parameter
@@ -70,10 +71,27 @@ router.get("/stores/:id", async (req, res) => {
 		// Sort reviews using helper
 		const sortedReviews = sortReviews(reviews, sort);
 
+		// Check if user has reviewed this store
+		let userReview = null;
+		if (req.session?.user) {
+			try {
+				userReview = await reviewsService.getUserReviewForStore(
+					req.session.user._id,
+					req.params.id,
+				);
+			} catch (e) {
+				// NotFoundError means user hasn't reviewed this store - that's ok
+				if (!(e instanceof NotFoundError)) {
+					throw e;
+				}
+			}
+		}
+
 		res.render("store-detail", {
 			title: `${store.name}`,
 			store,
 			reviews: sortedReviews,
+			userReview,
 			sort,
 			sortLabel,
 		});

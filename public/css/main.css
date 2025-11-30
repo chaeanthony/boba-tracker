@@ -115,3 +115,21 @@ nav a:hover {
 .pagination-info {
 	color: #666;
 }
+
+#review-form-container {
+	display: none;
+}
+
+#review-form-container.show {
+	display: block;
+}
+
+#comment-input {
+	padding: 0.5rem;
+}
+
+.star {
+	cursor: pointer;
+	color: lightgray;
+}
+
