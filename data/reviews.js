@@ -62,9 +62,16 @@ const createReview = async (storeId, userId, rating, comment) => {
 	const parsedRating = validateRating(rating);
 	const trimmedComment = validateComment(comment);
 
-	const existingReview = await getUserReviewForStore(userId, storeId);
-	if (existingReview) {
-		throw new ValidationError("You already reviewed this store");
+	try {
+		const existingReview = await getUserReviewForStore(userId, storeId);
+		if (existingReview) {
+			throw new ValidationError("You already reviewed this store");
+		}
+	} catch (e) {
+		// NotFoundError means no existing review - this is expected for new reviews
+		if (!(e instanceof NotFoundError)) {
+			throw e;
+		}
 	}
 
 	const reviewsCollection = await reviews();
