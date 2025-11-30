@@ -1,15 +1,15 @@
 import { ObjectId } from "mongodb";
 import { reviews } from "../config/mongoCollections.js";
-import { ValidationError } from "../errors.js";
+import { NotFoundError, ValidationError } from "../errors.js";
+import { validateComment, validateId, validateRating } from "../helpers.js";
+import { updateStoreStats } from "./scores.js";
 
 const getByStoreId = async (storeId) => {
-	if (!storeId || typeof storeId !== "string" || !ObjectId.isValid(storeId)) {
-		throw new ValidationError("invalid store ID provided");
-	}
+	const valStoreID = validateId(storeId);
 
 	const reviewsCollection = await reviews();
 	const storeReviews = await reviewsCollection
-		.find({ store_id: new ObjectId(storeId) })
+		.find({ store_id: new ObjectId(valStoreID) })
 		.sort({ updated_at: -1 })
 		.toArray();
 
@@ -22,13 +22,11 @@ const getByStoreId = async (storeId) => {
 };
 
 const getByUserId = async (userId) => {
-	if (!userId || typeof userId !== "string" || !ObjectId.isValid(userId)) {
-		throw new ValidationError("invalid user ID provided");
-	}
+	const valUserID = validateId(userId);
 
 	const reviewsCollection = await reviews();
 	const userReviews = await reviewsCollection
-		.find({ user_id: new ObjectId(userId) })
+		.find({ user_id: new ObjectId(valUserID) })
 		.sort({ updated_at: -1 })
 		.toArray();
 
@@ -40,9 +38,162 @@ const getByUserId = async (userId) => {
 	});
 };
 
+const getUserReviewForStore = async (userId, storeId) => {
+	const valUserID = validateId(userId);
+	const valStoreID = validateId(storeId);
+
+	const reviewsCollection = await reviews();
+	const review = await reviewsCollection.findOne({
+		user_id: new ObjectId(valUserID),
+		store_id: new ObjectId(valStoreID),
+	});
+
+	if (!review) throw new NotFoundError("Review not found");
+
+	review._id = review._id.toString();
+	review.store_id = review.store_id.toString();
+	review.user_id = review.user_id.toString();
+	return review;
+};
+
+const createReview = async (storeId, userId, rating, comment) => {
+	const valStoreID = validateId(storeId);
+	const valUserID = validateId(userId);
+	const parsedRating = validateRating(rating);
+	const trimmedComment = validateComment(comment);
+
+	const existingReview = await getUserReviewForStore(userId, storeId);
+	if (existingReview) {
+		throw new ValidationError("You already reviewed this store");
+	}
+
+	const reviewsCollection = await reviews();
+
+	const newReview = {
+		store_id: new ObjectId(valStoreID),
+		user_id: new ObjectId(valUserID),
+		rating: parsedRating,
+		comment: trimmedComment,
+		created_at: new Date(),
+		updated_at: new Date(),
+	};
+
+	const result = await reviewsCollection.insertOne(newReview);
+
+	if (!result.acknowledged || !result.insertedId) {
+		throw new Error("Could not create review");
+	}
+
+	await updateStoreStats(storeId);
+
+	newReview._id = result.insertedId.toString();
+	newReview.store_id = newReview.store_id.toString();
+	newReview.user_id = newReview.user_id.toString();
+
+	return newReview;
+};
+
+const updateReview = async (reviewId, userId, rating, comment) => {
+	const valReviewID = validateId(reviewId);
+	const valUserID = validateId(userId);
+	const parsedRating = validateRating(rating);
+	const trimmedComment = validateComment(comment);
+
+	const reviewsCollection = await reviews();
+
+	const existingReview = await reviewsCollection.findOne({
+		_id: new ObjectId(valReviewID),
+	});
+
+	if (!existingReview) {
+		throw new NotFoundError("Review not found");
+	}
+
+	if (existingReview.user_id.toString() !== valUserID) {
+		throw new ValidationError("You can only edit your own reviews");
+	}
+
+	const result = await reviewsCollection.updateOne(
+		{ _id: new ObjectId(valReviewID) },
+		{
+			$set: {
+				rating: parsedRating,
+				comment: trimmedComment,
+				updated_at: new Date(),
+			},
+		},
+	);
+
+	if (!result.acknowledged || result.matchedCount === 0) {
+		throw new Error("Could not update review");
+	}
+
+	await updateStoreStats(existingReview.store_id);
+
+	const updatedReview = await reviewsCollection.findOne({
+		_id: new ObjectId(reviewId),
+	});
+
+	updatedReview._id = updatedReview._id.toString();
+	updatedReview.store_id = updatedReview.store_id.toString();
+	updatedReview.user_id = updatedReview.user_id.toString();
+
+	return updatedReview;
+};
+
+const getAll = async (storeId = null, userId = null) => {
+	const reviewsCollection = await reviews();
+
+	const query = {};
+	if (storeId) {
+		const valStoreID = validateId(storeId);
+		query.store_id = new ObjectId(valStoreID);
+	}
+	if (userId) {
+		const valUserID = validateId(userId);
+		query.user_id = new ObjectId(valUserID);
+	}
+
+	const allReviews = await reviewsCollection
+		.find(query)
+		.sort({ updated_at: -1 })
+		.toArray();
+
+	return allReviews.map((review) => {
+		review._id = review._id.toString();
+		review.store_id = review.store_id.toString();
+		review.user_id = review.user_id.toString();
+		return review;
+	});
+};
+
+const getById = async (reviewId) => {
+	const valReviewID = validateId(reviewId);
+
+	const reviewsCollection = await reviews();
+	const review = await reviewsCollection.findOne({
+		_id: new ObjectId(valReviewID),
+	});
+
+	if (!review) {
+		throw new NotFoundError("Review not found");
+	}
+
+	review._id = review._id.toString();
+	review.store_id = review.store_id.toString();
+	review.user_id = review.user_id.toString();
+
+	return review;
+};
+
 const exportedMethods = {
+	getAll,
+	getById,
 	getByStoreId,
 	getByUserId,
+	getUserReviewForStore,
+	createReview,
+	updateReview,
 };
 
 export default exportedMethods;
