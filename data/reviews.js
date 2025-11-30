@@ -148,54 +148,7 @@ const updateReview = async (reviewId, userId, rating, comment) => {
 	return updatedReview;
 };
 
-const getAll = async (storeId = null, userId = null) => {
-	const reviewsCollection = await reviews();
-
-	const query = {};
-	if (storeId) {
-		const valStoreID = validateId(storeId);
-		query.store_id = new ObjectId(valStoreID);
-	}
-	if (userId) {
-		const valUserID = validateId(userId);
-		query.user_id = new ObjectId(valUserID);
-	}
-
-	const allReviews = await reviewsCollection
-		.find(query)
-		.sort({ updated_at: -1 })
-		.toArray();
-
-	return allReviews.map((review) => {
-		review._id = review._id.toString();
-		review.store_id = review.store_id.toString();
-		review.user_id = review.user_id.toString();
-		return review;
-	});
-};
-
-const getById = async (reviewId) => {
-	const valReviewID = validateId(reviewId);
-
-	const reviewsCollection = await reviews();
-	const review = await reviewsCollection.findOne({
-		_id: new ObjectId(valReviewID),
-	});
-
-	if (!review) {
-		throw new NotFoundError("Review not found");
-	}
-
-	review._id = review._id.toString();
-	review.store_id = review.store_id.toString();
-	review.user_id = review.user_id.toString();
-
-	return review;
-};
-
 const exportedMethods = {
-	getAll,
-	getById,
 	getByStoreId,
 	getByUserId,
 	getUserReviewForStore,
