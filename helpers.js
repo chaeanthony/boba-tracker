@@ -105,3 +105,25 @@ export const validatePassword = (password) => {
 
 	return trimmedPassword;
 };
+
+export const sortReviews = (reviews, sortOption) => {
+	if (!Array.isArray(reviews)) return reviews;
+
+	// Create a copy to avoid mutating the original array
+	const reviewsCopy = [...reviews];
+
+	switch (sortOption) {
+		case SORT_LEAST_RECENT:
+			return reviewsCopy.sort(
+				(a, b) => new Date(a.updated_at) - new Date(b.updated_at),
+			);
+		case SORT_HIGHEST_RATING:
+			return reviewsCopy.sort((a, b) => b.rating - a.rating);
+		case SORT_LOWEST_RATING:
+			return reviewsCopy.sort((a, b) => a.rating - b.rating);
+		default:
+			return reviewsCopy.sort(
+				(a, b) => new Date(b.updated_at) - new Date(a.updated_at),
+			);
+	}
+};
