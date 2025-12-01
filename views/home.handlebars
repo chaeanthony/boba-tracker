@@ -28,6 +28,17 @@
 								No reviews yet
 							{{/if}}
 						</div>
+						
+						
+						{{#if this.grand_open_date}}
+							{{#if ../currentUser}}
+								<div class="store-grand-opening">
+									Opened: {{formatDate this.grand_open_date}}
+								</div>
+							{{/if}}
+						{{/if}}
+						
+						
 					</a>
 					{{#if this.website}}
 						<div class="store-website">

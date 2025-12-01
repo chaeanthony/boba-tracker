@@ -77,7 +77,7 @@ const seedDatabase = async () => {
 				lng: -74.0293,
 			},
 			website: "https://gongchausa.com/nj-hoboken/",
-			grand_open_date: null,
+			grand_open_date: new Date("2020-03-15"),  // Add actual date
 			tags: {
 				non_dairy: true,
 				gluten_free: false,
@@ -104,7 +104,7 @@ const seedDatabase = async () => {
 				lng: -74.0295,
 			},
 			website: "https://www.kungfutea.com/",
-			grand_open_date: null,
+			grand_open_date: new Date("2019-08-01"),  // Add actual date
 			tags: {
 				non_dairy: true,
 				gluten_free: false,
