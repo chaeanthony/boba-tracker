@@ -1,6 +1,7 @@
 import express from "express";
 import exphbs from "express-handlebars";
 import session from "express-session";
+import reviewsAPI from "../api/reviews.js";
 import { SESSION_NAME } from "../config/settings.js";
 import bobaRoutes from "./boba.js";
 import usersRoutes from "./users.js";
@@ -59,6 +60,9 @@ const constructRoutes = (app) => {
 	// Routes
 	app.use("/", bobaRoutes);
 	app.use("/users", usersRoutes);
+
+	// API
+	app.use("/api/reviews", reviewsAPI);
 
 	// 404 catch-all
 	app.use((_req, res) => {

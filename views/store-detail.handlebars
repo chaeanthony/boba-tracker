@@ -2,62 +2,67 @@
 	<h1>{{store.name}}</h1>
 
 	{{#if store.address}}
-		<div>
-			<h2>Address</h2>
-			<p>
-				{{store.address.street}}
-				{{store.address.city}},
-				{{store.address.state}}
-				{{store.address.zip}}
-			</p>
-		</div>
+	<div>
+		<h2>Address</h2>
+		<p>
+			{{store.address.street}}
+			{{store.address.city}},
+			{{store.address.state}}
+			{{store.address.zip}}
+		</p>
+	</div>
 	{{/if}}
 
 	{{#if store.website}}
-		<div>
-			<h2>Website</h2>
-			<p><a
-					href='{{store.website}}'
-					class='store-link'
-					target='_blank'
-				>{{store.website}}</a></p>
-		</div>
+	<div>
+		<h2>Website</h2>
+		<p><a href='{{store.website}}' class='store-link' target='_blank'>{{store.website}}</a></p>
+	</div>
 	{{/if}}
 
 	{{#if store.stats.n_ratings}}
-		<div>
-			<h2>Ratings</h2>
-			<p>{{store.stats.avg_rating}}
-				based on
-				{{store.stats.n_ratings}}
-				reviews</p>
-		</div>
+	<div>
+		<h2>Ratings</h2>
+		<p>{{store.stats.avg_rating}}
+			based on
+			{{store.stats.n_ratings}}
+			reviews</p>
+	</div>
 	{{/if}}
 
 	{{#if store.grand_open_date}}
-		<div>
-			<h2>Grand Opening Date</h2>
-			<p>{{formatDate store.grand_open_date}}</p>
-		</div>
+	<div>
+		<h2>Grand Opening Date</h2>
+		<p>{{formatDate store.grand_open_date}}</p>
+	</div>
 	{{/if}}
 
 	{{#if store.tags}}
+	<div>
+		<h2>Tags</h2>
 		<div>
-			<h2>Tags</h2>
-			<div>
-				{{#if store.tags.non_dairy}}
-					<span>Non-Dairy Options</span>
-				{{/if}}
-				{{#if store.tags.gluten_free}}
-					<span>Gluten-Free Options</span>
-				{{/if}}
-			</div>
+			{{#if store.tags.non_dairy}}
+			<span>Non-Dairy Options</span>
+			{{/if}}
+			{{#if store.tags.gluten_free}}
+			<span>Gluten-Free Options</span>
+			{{/if}}
 		</div>
+	</div>
 	{{/if}}
 
-	<div>
-		<h2>Reviews</h2>
-		{{#if reviews.length}}
+
+	<div class="reviews-container">
+		<div class="reviews-list-section">
+			<div class="reviews-list-header">
+				<h2>Reviews</h2>
+				{{#unless currentUser}}
+				<button class="login-btn" type="button">
+					<a href='/users/login'>Sign in to write a review</a>
+				</button>
+				{{/unless}}
+			</div>
+			{{#if reviews.length}}
 			<form>
 				<label for='sort_by'>Sort by: </label>
 				<select id='sort_by' name='sort_by' onchange='location = this.value;'>
@@ -70,15 +75,83 @@
 			</form>
 			<div>
 				{{#each reviews}}
-					<div class='review-item-container'>
-						<div class='review-rating'>{{this.rating}}</div>
-						<div class='review-comment'>{{this.comment}}</div>
-						<div class='review-date'>{{formatDate this.updated_at}}</div>
-					</div>
+				<div class='review-item-container'>
+					<div class='review-rating'>{{this.rating}}</div>
+					<div class='review-comment'>{{this.comment}}</div>
+					<div class='review-date'>{{formatDate this.updated_at}}</div>
+				</div>
 				{{/each}}
 			</div>
-		{{else}}
+			{{else}}
 			<p>No reviews yet. Be the first to review!</p>
-		{{/if}}
+			{{/if}}
+		</div>
+		<div class="reviews-form-section">
+			{{#if userReview}}
+			<div>
+				<h2>My Review</h2>
+				<form id="update-review-form">
+					<input type='hidden' name='store_id' value='{{store._id}}' />
+					<input type='hidden' name='review_id' value='{{userReview._id}}' />
+
+					<div>
+						<label>Rating:</label>
+						<div id='star-rating'>
+							<span class='star' data-rating='1'>★</span>
+							<span class='star' data-rating='2'>★</span>
+							<span class='star' data-rating='3'>★</span>
+							<span class='star' data-rating='4'>★</span>
+							<span class='star' data-rating='5'>★</span>
+						</div>
+						<input type='hidden' id='rating-input' name='rating' value='{{userReview.rating}}' required />
+					</div>
+
+					<div class="comment-container">
+						<label for='comment-input'>Comment:</label>
+						<textarea id='comment-input' name='comment' maxlength='1000'
+							rows='5'>{{userReview.comment}}</textarea>
+						<div id='char-counter'>{{userReview.comment.length}}/1000 characters</div>
+					</div>
+
+					<div>
+						<button type='submit'>Update Review</button>
+					</div>
+				</form>
+			</div>
+			{{else}}
+			{{#if currentUser}}
+			<div>
+				<h2>Write a Review</h2>
+				<form id="create-review-form">
+					<input type='hidden' name='store_id' value='{{store._id}}' />
+
+					<div>
+						<label>Rating:</label>
+						<div id='star-rating'>
+							<span class='star' data-rating='1'>★</span>
+							<span class='star' data-rating='2'>★</span>
+							<span class='star' data-rating='3'>★</span>
+							<span class='star' data-rating='4'>★</span>
+							<span class='star' data-rating='5'>★</span>
+						</div>
+						<input type='hidden' id='rating-input' name='rating' required />
+					</div>
+
+					<div class="comment-container">
+						<label for='comment-input'>Comment:</label>
+						<textarea id='comment-input' name='comment' maxlength='1000' rows='5'></textarea>
+						<div id='char-counter'>0/1000 characters</div>
+					</div>
+
+					<div>
+						<button type='submit'>Submit Review</button>
+					</div>
+				</form>
+			</div>
+			{{/if}}
+			{{/if}}
+		</div>
 	</div>
 </div>
+
+<script src='/public/js/storeDetail.js'></script>

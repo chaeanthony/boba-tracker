@@ -5,11 +5,9 @@ import { NotFoundError, ValidationError } from "../errors.js";
 import {
 	REVIEW_SORT_LABELS,
 	SORT_HIGHEST_RATED,
-	SORT_HIGHEST_RATING,
-	SORT_LEAST_RECENT,
-	SORT_LOWEST_RATING,
 	SORT_MOST_RECENT,
 	STORE_SORT_LABELS,
+	sortReviews,
 	VALID_REVIEW_SORTS,
 	VALID_STORE_SORTS,
 } from "../helpers.js";
@@ -59,7 +57,8 @@ router.get("/about", (_req, res) => {
 router.get("/stores/:id", async (req, res) => {
 	try {
 		const store = await bobaService.getById(req.params.id);
-		let reviews = await reviewsService.getByStoreId(req.params.id);
+		const reviews = await reviewsService.getByStoreId(req.params.id);
+
 		// Sort parameter
 		let sort = req.query.sort;
 		// Validate sort parameter
@@ -69,33 +68,30 @@ router.get("/stores/:id", async (req, res) => {
 		// Label to show up in dropdown menu for selected sort
 		const sortLabel = REVIEW_SORT_LABELS[sort];
 
-		if (reviews && Array.isArray(reviews)) {
-			reviews = [...reviews];
+		// Sort reviews using helper
+		const sortedReviews = sortReviews(reviews, sort);
 
-			switch (sort) {
-				case SORT_LEAST_RECENT:
-					reviews.sort(
-						(a, b) => new Date(a.updated_at) - new Date(b.updated_at),
-					);
-					break;
-				case SORT_HIGHEST_RATING:
-					reviews.sort((a, b) => b.rating - a.rating);
-					break;
-				case SORT_LOWEST_RATING:
-					reviews.sort((a, b) => a.rating - b.rating);
-					break;
-				default:
-					reviews.sort(
-						(a, b) => new Date(b.updated_at) - new Date(a.updated_at),
-					);
-					break;
+		// Check if user has reviewed this store
+		let userReview = null;
+		if (req.session?.user) {
+			try {
+				userReview = await reviewsService.getUserReviewForStore(
+					req.session.user._id,
+					req.params.id,
+				);
+			} catch (e) {
+				// NotFoundError means user hasn't reviewed this store - that's ok
+				if (!(e instanceof NotFoundError)) {
+					throw e;
+				}
 			}
 		}
 
 		res.render("store-detail", {
 			title: `${store.name}`,
 			store,
-			reviews,
+			reviews: sortedReviews,
+			userReview,
 			sort,
 			sortLabel,
 		});

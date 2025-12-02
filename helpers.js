@@ -105,3 +105,44 @@ export const validatePassword = (password) => {
 
 	return trimmedPassword;
 };
+
+export const validateRating = (rating) => {
+	const parsedRating = Number.parseInt(rating, 10);
+	if (Number.isNaN(parsedRating) || parsedRating < 1 || parsedRating > 5) {
+		throw new ValidationError("rating must be an integer between 1 and 5");
+	}
+	return parsedRating;
+};
+
+export const validateComment = (comment) => {
+	if (typeof comment !== "string")
+		throw new ValidationError("comment must be a string");
+	const trimmedComment = comment.trim();
+	if (trimmedComment.length === 0)
+		throw new ValidationError("comment cannot be empty");
+	if (trimmedComment.length > 1000)
+		throw new ValidationError("comment must be at most 1000 characters");
+	return trimmedComment;
+};
+
+export const sortReviews = (reviews, sortOption) => {
+	if (!Array.isArray(reviews)) return reviews;
+
+	// Create a copy to avoid mutating the original array
+	const reviewsCopy = [...reviews];
+
+	switch (sortOption) {
+		case SORT_LEAST_RECENT:
+			return reviewsCopy.sort(
+				(a, b) => new Date(a.updated_at) - new Date(b.updated_at),
+			);
+		case SORT_HIGHEST_RATING:
+			return reviewsCopy.sort((a, b) => b.rating - a.rating);
+		case SORT_LOWEST_RATING:
+			return reviewsCopy.sort((a, b) => a.rating - b.rating);
+		default:
+			return reviewsCopy.sort(
+				(a, b) => new Date(b.updated_at) - new Date(a.updated_at),
+			);
+	}
+};
