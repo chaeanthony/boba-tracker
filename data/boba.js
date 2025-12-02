@@ -46,7 +46,7 @@ const getAll = async (page = 1, perPage = 10, sort = SORT_HIGHEST_RATED) => {
 			sortSpecification = { "stats.avg_rating": 1 };
 			break;
 		case SORT_NEWEST:
-			sortSpecification = { "stats.updated_at": -1 };
+			sortSpecification = { "grand_open_date": -1 };
 			break;
 		case SORT_TRENDING:
 			sortSpecification = { "stats.trending_score": -1 };
