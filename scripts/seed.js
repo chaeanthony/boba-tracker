@@ -77,7 +77,7 @@ const seedDatabase = async () => {
 				lng: -74.0293,
 			},
 			website: "https://gongchausa.com/nj-hoboken/",
-			grand_open_date: null,
+			grand_open_date: new Date("2019-08-18"),
 			tags: {
 				non_dairy: true,
 				gluten_free: false,
@@ -104,7 +104,7 @@ const seedDatabase = async () => {
 				lng: -74.0295,
 			},
 			website: "https://www.kungfutea.com/",
-			grand_open_date: null,
+			grand_open_date: new Date("2023-05-15"),
 			tags: {
 				non_dairy: true,
 				gluten_free: false,
@@ -131,7 +131,7 @@ const seedDatabase = async () => {
 				lng: -74.0291,
 			},
 			website: null,
-			grand_open_date: null,
+			grand_open_date: new Date("2025-02-25"),
 			tags: {
 				non_dairy: false,
 				gluten_free: false,
