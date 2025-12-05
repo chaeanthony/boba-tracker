@@ -87,14 +87,15 @@ document.addEventListener("DOMContentLoaded", () => {
 			alert("An error occurred. Please try again.");
 		}
 	});
-	
 
 	const privateNoteForm = document.getElementById("private-note-form");
 	if (privateNoteForm) {
 		privateNoteForm.addEventListener("submit", async (event) => {
 			event.preventDefault();
 
-			const storeIdInput = privateNoteForm.querySelector('input[name="store_id"]');
+			const storeIdInput = privateNoteForm.querySelector(
+				'input[name="store_id"]',
+			);
 			const noteTextarea = document.getElementById("private-note-input");
 
 			const storeId = storeIdInput?.value;

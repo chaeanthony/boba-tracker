@@ -13,7 +13,7 @@ const getUserNoteForStore = async (userId, storeId) => {
 		store_id: new ObjectId(valStoreID),
 	});
 
-	if (!note) return null; 
+	if (!note) return null;
 
 	note._id = note._id.toString();
 	note.user_id = note.user_id.toString();
@@ -26,7 +26,6 @@ const upsertUserNoteForStore = async (storeId, userId, text) => {
 	const valStoreID = validateId(storeId);
 	const valUserID = validateId(userId);
 
-	
 	const trimmedText = validateComment(text);
 
 	const notesCollection = await userNotes();
@@ -48,7 +47,9 @@ const upsertUserNoteForStore = async (storeId, userId, text) => {
 		},
 	};
 
-	const result = await notesCollection.updateOne(filter, update, { upsert: true });
+	const result = await notesCollection.updateOne(filter, update, {
+		upsert: true,
+	});
 
 	if (!result.acknowledged) {
 		throw new Error("Could not save private note");
@@ -83,7 +84,7 @@ const getByUserId = async (userId) => {
 const exportedMethods = {
 	getUserNoteForStore,
 	upsertUserNoteForStore,
-    getByUserId,  
+	getByUserId,
 };
 
 export default exportedMethods;

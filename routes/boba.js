@@ -1,7 +1,7 @@
 import express from "express";
 import bobaService from "../data/boba.js";
 import reviewsService from "../data/reviews.js";
-import userNotesService from "../data/userNotes.js"; 
+import userNotesService from "../data/userNotes.js";
 import { NotFoundError, ValidationError } from "../errors.js";
 import {
 	REVIEW_SORT_LABELS,
@@ -84,7 +84,6 @@ router.get("/stores/:id", async (req, res) => {
 				}
 			}
 
-			
 			privateNote = await userNotesService.getUserNoteForStore(
 				req.session.user._id,
 				req.params.id,
@@ -96,7 +95,7 @@ router.get("/stores/:id", async (req, res) => {
 			store,
 			reviews: sortedReviews,
 			userReview,
-			privateNote, 
+			privateNote,
 			sort,
 			sortLabel,
 		});
@@ -127,7 +126,9 @@ router.get("/stores/:id", async (req, res) => {
 router.post("/stores/:id/private-note", async (req, res) => {
 	try {
 		if (!req.session?.user) {
-			return res.status(401).json({ error: "You must be logged in to save a private note." });
+			return res
+				.status(401)
+				.json({ error: "You must be logged in to save a private note." });
 		}
 
 		const storeId = req.params.id;
