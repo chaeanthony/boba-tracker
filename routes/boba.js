@@ -1,6 +1,7 @@
 import express from "express";
 import bobaService from "../data/boba.js";
 import reviewsService from "../data/reviews.js";
+import userNotesService from "../data/userNotes.js"; 
 import { NotFoundError, ValidationError } from "../errors.js";
 import {
 	REVIEW_SORT_LABELS,
@@ -48,11 +49,6 @@ router.get("/", async (req, res) => {
 	}
 });
 
-// About page
-router.get("/about", (_req, res) => {
-	res.render("about", { title: "About - Boba Tracker" });
-});
-
 // Store detail page
 router.get("/stores/:id", async (req, res) => {
 	try {
@@ -73,6 +69,8 @@ router.get("/stores/:id", async (req, res) => {
 
 		// Check if user has reviewed this store
 		let userReview = null;
+		let privateNote = null;
+
 		if (req.session?.user) {
 			try {
 				userReview = await reviewsService.getUserReviewForStore(
@@ -85,6 +83,12 @@ router.get("/stores/:id", async (req, res) => {
 					throw e;
 				}
 			}
+
+			
+			privateNote = await userNotesService.getUserNoteForStore(
+				req.session.user._id,
+				req.params.id,
+			);
 		}
 
 		res.render("store-detail", {
@@ -92,6 +96,7 @@ router.get("/stores/:id", async (req, res) => {
 			store,
 			reviews: sortedReviews,
 			userReview,
+			privateNote, 
 			sort,
 			sortLabel,
 		});
@@ -116,6 +121,32 @@ router.get("/stores/:id", async (req, res) => {
 			title: "Error",
 			errorMessage: "Uh oh, something went wrong. Please try again later.",
 		});
+	}
+});
+
+router.post("/stores/:id/private-note", async (req, res) => {
+	try {
+		if (!req.session?.user) {
+			return res.status(401).json({ error: "You must be logged in to save a private note." });
+		}
+
+		const storeId = req.params.id;
+		const userId = req.session.user._id;
+		const { note } = req.body;
+
+		const savedNote = await userNotesService.upsertUserNoteForStore(
+			storeId,
+			userId,
+			note,
+		);
+
+		return res.json({
+			success: true,
+			note: savedNote,
+		});
+	} catch (e) {
+		console.error(e);
+		return res.status(500).json({ error: "Could not save private note" });
 	}
 });
 

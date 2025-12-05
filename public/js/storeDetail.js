@@ -87,6 +87,61 @@ document.addEventListener("DOMContentLoaded", () => {
 			alert("An error occurred. Please try again.");
 		}
 	});
+	
+
+	const privateNoteForm = document.getElementById("private-note-form");
+	if (privateNoteForm) {
+		privateNoteForm.addEventListener("submit", async (event) => {
+			event.preventDefault();
+
+			const storeIdInput = privateNoteForm.querySelector('input[name="store_id"]');
+			const noteTextarea = document.getElementById("private-note-input");
+
+			const storeId = storeIdInput?.value;
+			const noteText = noteTextarea.value.trim();
+
+			if (!noteText) {
+				alert("Please enter a note before saving.");
+				return;
+			}
+
+			try {
+				const res = await fetch(`/stores/${storeId}/private-note`, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ note: noteText }),
+				});
+
+				const data = await res.json();
+
+				let statusEl = document.getElementById("private-note-status");
+				if (!statusEl) {
+					statusEl = document.createElement("p");
+					statusEl.id = "private-note-status";
+					statusEl.classList.add("helper-text");
+					privateNoteForm.appendChild(statusEl);
+				}
+
+				if (!res.ok || !data.success) {
+					statusEl.textContent = data.error || "Error saving note.";
+				} else {
+					statusEl.textContent = "Note saved!";
+				}
+			} catch (e) {
+				console.error("Error saving private note:", e);
+				let statusEl = document.getElementById("private-note-status");
+				if (!statusEl) {
+					statusEl = document.createElement("p");
+					statusEl.id = "private-note-status";
+					statusEl.classList.add("helper-text");
+					privateNoteForm.appendChild(statusEl);
+				}
+				statusEl.textContent = "Error saving note.";
+			}
+		});
+	}
 });
 
 function highlightStars(rating) {
