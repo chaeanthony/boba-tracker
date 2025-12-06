@@ -1,57 +1,80 @@
 <div class="container">
-	<h1>Boba Stores</h1>
+    <h1>Boba Stores</h1>
 
-	{{#if stores}}
-				<form>
-				<label for='sort_stores_by'>Sort by: </label>
-				<select id='sort_stores_by' name='sort_stores_by' onchange='location = this.value;'>
-					<option disabled selected>{{sortLabel}}</option>
-					<option value='/?sort=highest_rated'>Highest Rated</option>
-					<option value='/?sort=lowest_rated'>Lowest Rated</option>
-					<option value='/?sort=trending'>Trending</option>
-					<option value='/?sort=most_reviews'>Most Reviews</option>
-					<option value='/?sort=newest'>Newest</option>
-				</select>
-			</form>
-		<ul>
-			{{#each stores}}
-				<li class="store-item">
-					<a href="/stores/{{this._id}}">
-						<div class="store-name">{{this.name}}</div>
-						{{#if this.address}}
-							<div>{{this.address.street}}, {{this.address.city}}, {{this.address.state}} {{this.address.zip}}</div>
-						{{/if}}
-						<div>
-							{{#if this.stats.n_ratings}}
-								{{this.stats.avg_rating}} based on {{this.stats.n_ratings}} reviews
-							{{else}}
-								No reviews yet
-							{{/if}}
-						</div>
-					</a>
-					{{#if this.website}}
-						<div class="store-website">
-							<a href="{{this.website}}" class="store-link" target="_blank">{{this.website}}</a>
-						</div>
-					{{/if}}
-				</li>
-			{{/each}}
-		</ul>
+    {{#if stores}}
+        <form>
+            <label for="sort_stores_by">Sort by: </label>
+            <select
+                id="sort_stores_by"
+                name="sort_stores_by"
+                onchange="location = this.value;"
+            >
+                <option disabled selected>{{sortLabel}}</option>
+                <option value="/?sort=highest_rated">Highest Rated</option>
+                <option value="/?sort=lowest_rated">Lowest Rated</option>
+                <option value="/?sort=trending">Trending</option>
+                <option value="/?sort=most_reviews">Most Reviews</option>
+                <option value="/?sort=newest">Newest</option>
+            </select>
+        </form>
+        <ul>
+            {{#each stores}}
+                <li class="store-item">
+                    <a href="/stores/{{this._id}}">
+                        <div class="store-name">{{this.name}}</div>
+                        {{#if this.address}}
+                            <div>{{this.address.street}},
+                                {{this.address.city}},
+                                {{this.address.state}}
+                                {{this.address.zip}}</div>
+                        {{/if}}
+                        <div>
+                            {{#if this.stats.n_ratings}}
+                                {{this.stats.avg_rating}}
+                                based on
+                                {{this.stats.n_ratings}}
+                                reviews
+                            {{else}}
+                                No reviews yet
+                            {{/if}}
+                        </div>
+                    </a>
+                    {{#if this.website}}
+                        <div class="store-website">
+                            <a
+                                href="{{this.website}}"
+                                class="store-link"
+                                target="_blank"
+                            >{{this.website}}</a>
+                        </div>
+                    {{/if}}
+                    {{#if this.grand_open_date}}
+                        <div>Opened: {{formatDate this.grand_open_date}}</div>
+                    {{/if}}
+                </li>
+            {{/each}}
+        </ul>
 
-		<div class="pagination">
-			{{#if prevPage}}
-				<a href="/?page={{prevPage}}&sort={{sort}}" class="pagination-btn">Previous</a>
-			{{else}}
-				<span class="pagination-btn disabled">Previous</span>
-			{{/if}}
-			<span class="pagination-info">Page {{page}}</span>
-			{{#if nextPage}}
-				<a href="/?page={{nextPage}}&sort={{sort}}" class="pagination-btn">Next</a>
-			{{else}}
-				<span class="pagination-btn disabled">Next</span>
-			{{/if}}
-		</div>
-	{{else}}
-		<p>No stores found.</p>
-	{{/if}}
+        <div class="pagination">
+            {{#if prevPage}}
+                <a
+                    href="/?page={{prevPage}}&sort={{sort}}"
+                    class="pagination-btn"
+                >Previous</a>
+            {{else}}
+                <span class="pagination-btn disabled">Previous</span>
+            {{/if}}
+            <span class="pagination-info">Page {{page}}</span>
+            {{#if nextPage}}
+                <a
+                    href="/?page={{nextPage}}&sort={{sort}}"
+                    class="pagination-btn"
+                >Next</a>
+            {{else}}
+                <span class="pagination-btn disabled">Next</span>
+            {{/if}}
+        </div>
+    {{else}}
+        <p>No stores found.</p>
+    {{/if}}
 </div>
