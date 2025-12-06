@@ -36,9 +36,9 @@ const constructRoutes = (app) => {
 				formatDate: (date) => {
 					if (!date) return "";
 					const d = new Date(date);
-					const month = String(d.getMonth() + 1).padStart(2, "0");
-					const day = String(d.getDate()).padStart(2, "0");
-					const year = d.getFullYear();
+					const month = String(d.getUTCMonth() + 1).padStart(2, "0");
+					const day = String(d.getUTCDate()).padStart(2, "0");
+					const year = d.getUTCFullYear();
 					return `${month}-${day}-${year}`;
 				},
 				formatDateTime: (date) => {
@@ -52,6 +52,43 @@ const constructRoutes = (app) => {
 						minute: "2-digit",
 					});
 				},
+				
+				calculateStoreAge: (grandOpenDate) => {
+                if (!grandOpenDate) return "N/A";
+                
+                const grandOpen = new Date(grandOpenDate);
+                const today = new Date();
+                
+                // Calculate difference in years and months
+                let years = today.getFullYear() - grandOpen.getFullYear();
+                let months = today.getMonth() - grandOpen.getMonth();
+                
+                // Adjust for negative months
+                if (months < 0) {
+                    years--;
+                    months += 12;
+                }
+                
+                // Calculate total months for more precise calculation
+                const totalMonths = years * 12 + months;
+                
+                if (years === 0 && months === 0) {
+                    // Store opened this month
+                    const daysDiff = Math.floor((today - grandOpen) / (1000 * 60 * 60 * 24));
+                    if (daysDiff === 0) return "Opened today!";
+                    if (daysDiff === 1) return "Opened yesterday";
+                    if (daysDiff < 7) return `Opened ${daysDiff} days ago`;
+                    if (daysDiff < 30) return `Opened ${Math.floor(daysDiff/7)} weeks ago`;
+                    return `Opened ${months} month${months !== 1 ? 's' : ''} ago`;
+                } else if (years === 0) {
+                    return `${months} month${months !== 1 ? 's' : ''} old`;
+                } else if (months === 0) {
+                    return `${years} year${years !== 1 ? 's' : ''} old`;
+                } else {
+                    return `${years} year${years !== 1 ? 's' : ''}, ${months} month${months !== 1 ? 's' : ''} old`;
+                }
+			   },
+				
 			},
 		}),
 	);

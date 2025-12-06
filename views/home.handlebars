@@ -48,9 +48,24 @@
                             >{{this.website}}</a>
                         </div>
                     {{/if}}
-                    {{#if this.grand_open_date}}
-                        <div>Opened: {{formatDate this.grand_open_date}}</div>
-                    {{/if}}
+					
+					
+					
+					
+					
+                    <!-- Grand Opening Date Section -->
+                    <div class="grand-opening-date">
+                        {{#if this.grand_open_date}}
+                            <span class="opening-date-label">Grand Opening Date:</span>
+                            <span class="opening-date-value">{{formatDate this.grand_open_date}}</span>
+                        {{else}}
+                            <span class="opening-date-label">Grand Opening Date:</span>
+                            <span class="opening-date-unknown">Not specified</span>
+                        {{/if}}
+                    </div>
+					
+					
+					
                 </li>
             {{/each}}
         </ul>

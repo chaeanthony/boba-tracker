@@ -31,11 +31,32 @@
 	{{/if}}
 
 	{{#if store.grand_open_date}}
-	<div>
-		<h2>Grand Opening Date</h2>
-		<p>{{formatDate store.grand_open_date}}</p>
-	</div>
-	{{/if}}
+        <div class="store-section">
+            <h2>Store Information</h2>
+            <div class="store-age-info">
+                <div class="store-info-row">
+                    <span class="info-label">Grand Opening Date:</span>
+                    <span class="info-value">{{formatDate store.grand_open_date}}</span>
+                </div>
+                <div class="store-info-row">
+                    <span class="info-label">Opened For:</span>
+                    <span class="info-value age-value">{{calculateStoreAge store.grand_open_date}}</span>
+                </div>
+            </div>
+        </div>
+    {{else}}
+        <div class="store-section">
+            <h2>Store Information</h2>
+            <div class="store-age-info">
+                <div class="store-info-row">
+                    <span class="info-label">Grand Opening Date:</span>
+                    <span class="info-value">Not available</span>
+                </div>
+            </div>
+        </div>
+    {{/if}}
+	
+	
 
 	{{#if store.tags}}
 	<div>
