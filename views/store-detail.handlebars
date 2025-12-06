@@ -87,68 +87,96 @@
 			{{/if}}
 		</div>
 		<div class="reviews-form-section">
-			{{#if userReview}}
-			<div>
-				<h2>My Review</h2>
-				<form id="update-review-form">
-					<input type='hidden' name='store_id' value='{{store._id}}' />
-					<input type='hidden' name='review_id' value='{{userReview._id}}' />
-
-					<div>
-						<label>Rating:</label>
-						<div id='star-rating'>
-							<span class='star' data-rating='1'>★</span>
-							<span class='star' data-rating='2'>★</span>
-							<span class='star' data-rating='3'>★</span>
-							<span class='star' data-rating='4'>★</span>
-							<span class='star' data-rating='5'>★</span>
-						</div>
-						<input type='hidden' id='rating-input' name='rating' value='{{userReview.rating}}' required />
-					</div>
-
-					<div class="comment-container">
-						<label for='comment-input'>Comment:</label>
-						<textarea id='comment-input' name='comment' maxlength='1000'
-							rows='5'>{{userReview.comment}}</textarea>
-						<div id='char-counter'>{{userReview.comment.length}}/1000 characters</div>
-					</div>
-
-					<div>
-						<button type='submit'>Update Review</button>
-					</div>
-				</form>
-			</div>
-			{{else}}
 			{{#if currentUser}}
-			<div>
-				<h2>Write a Review</h2>
-				<form id="create-review-form">
-					<input type='hidden' name='store_id' value='{{store._id}}' />
+				{{#if userReview}}
+				<div>
+					<h2>My Review</h2>
+					<form id="update-review-form">
+						<input type='hidden' name='store_id' value='{{store._id}}' />
+						<input type='hidden' name='review_id' value='{{userReview._id}}' />
 
-					<div>
-						<label>Rating:</label>
-						<div id='star-rating'>
-							<span class='star' data-rating='1'>★</span>
-							<span class='star' data-rating='2'>★</span>
-							<span class='star' data-rating='3'>★</span>
-							<span class='star' data-rating='4'>★</span>
-							<span class='star' data-rating='5'>★</span>
+						<div>
+							<label>Rating:</label>
+							<div id='star-rating'>
+								<span class='star' data-rating='1'>★</span>
+								<span class='star' data-rating='2'>★</span>
+								<span class='star' data-rating='3'>★</span>
+								<span class='star' data-rating='4'>★</span>
+								<span class='star' data-rating='5'>★</span>
+							</div>
+							<input type='hidden' id='rating-input' name='rating' value='{{userReview.rating}}' required />
 						</div>
-						<input type='hidden' id='rating-input' name='rating' required />
-					</div>
 
-					<div class="comment-container">
-						<label for='comment-input'>Comment:</label>
-						<textarea id='comment-input' name='comment' maxlength='1000' rows='5'></textarea>
-						<div id='char-counter'>0/1000 characters</div>
-					</div>
+						<div class="comment-container">
+							<label for='comment-input'>Comment:</label>
+							<textarea id='comment-input' name='comment' maxlength='1000'
+								rows='5'>{{userReview.comment}}</textarea>
+							<div id='char-counter'>{{userReview.comment.length}}/1000 characters</div>
+						</div>
 
-					<div>
-						<button type='submit'>Submit Review</button>
-					</div>
-				</form>
-			</div>
-			{{/if}}
+						<div>
+							<button type='submit'>Update Review</button>
+						</div>
+					</form>
+				</div>
+				{{else}}
+				<div>
+					<h2>Write a Review</h2>
+					<form id="create-review-form">
+						<input type='hidden' name='store_id' value='{{store._id}}' />
+
+						<div>
+							<label>Rating:</label>
+							<div id='star-rating'>
+								<span class='star' data-rating='1'>★</span>
+								<span class='star' data-rating='2'>★</span>
+								<span class='star' data-rating='3'>★</span>
+								<span class='star' data-rating='4'>★</span>
+								<span class='star' data-rating='5'>★</span>
+							</div>
+							<input type='hidden' id='rating-input' name='rating' required />
+						</div>
+
+						<div class="comment-container">
+							<label for='comment-input'>Comment:</label>
+							<textarea id='comment-input' name='comment' maxlength='1000' rows='5'></textarea>
+							<div id='char-counter'>0/1000 characters</div>
+						</div>
+
+						<div>
+							<button type='submit'>Submit Review</button>
+						</div>
+					</form>
+				</div>
+				{{/if}}
+
+				
+				<div class="private-notes-section">
+					<h2>My Private Notes</h2>
+					<p class="helper-text">Only you can see these notes.</p>
+
+					<form id="private-note-form">
+						<input type="hidden" name="store_id" value="{{store._id}}" />
+
+						<div class="comment-container">
+							<label for="private-note-input">Private Note:</label>
+							<textarea
+								id="private-note-input"
+								name="note"
+								rows="4"
+								maxlength="1000"
+							>{{#if privateNote}}{{privateNote.text}}{{/if}}</textarea>
+						</div>
+
+						<div>
+							<button type="submit">
+								{{#if privateNote}}Update Note{{else}}Save Note{{/if}}
+							</button>
+						</div>
+					</form>
+				</div>
+				
+
 			{{/if}}
 		</div>
 	</div>

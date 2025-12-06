@@ -8,22 +8,47 @@
         <p><strong>Total Reviews:</strong> {{reviewCount}}</p>
     </div>
 
-    <h2>My Reviews</h2>
-    
-    {{#if reviews}}
-        <div class="reviews-list">
-            {{#each reviews}}
-                <div class="review-card">
-                    <h3>
-                        <a href="/stores/{{store._id}}">{{store.name}}</a>
-                    </h3>
-                    <p><strong>Rating:</strong> {{rating}}/5 ⭐</p>
-                    <p><strong>Review:</strong> {{comment}}</p>
-                    <p class="review-date">{{formatDateTime updated_at}}</p>
+    <div class="profile-content">
+        <div class="profile-reviews">
+            <h2>My Reviews</h2>
+            
+            {{#if reviews}}
+                <div class="reviews-list">
+                    {{#each reviews}}
+                        <div class="review-card">
+                            <h3>
+                                <a href="/stores/{{store._id}}">{{store.name}}</a>
+                            </h3>
+                            <p><strong>Rating:</strong> {{rating}}/5 ⭐</p>
+                            <p><strong>Review:</strong> {{comment}}</p>
+                            <p class="review-date">{{formatDateTime updated_at}}</p>
+                        </div>
+                    {{/each}}
                 </div>
-            {{/each}}
+            {{else}}
+                <p>You haven't reviewed any stores yet. <a href="/">Start exploring!</a></p>
+            {{/if}}
         </div>
-    {{else}}
-        <p>You haven't reviewed any stores yet. <a href="/">Start exploring!</a></p>
-    {{/if}}
+
+       
+        <div class="profile-notes">
+            <h2>My Private Notes</h2>
+
+            {{#if privateNotes}}
+                <div class="notes-list">
+                    {{#each privateNotes}}
+                        <div class="note-card">
+                            <h3>
+                                <a href="/stores/{{store._id}}">{{store.name}}</a>
+                            </h3>
+                            <p>{{text}}</p>
+                            <p class="note-date">{{formatDateTime updated_at}}</p>
+                        </div>
+                    {{/each}}
+                </div>
+            {{else}}
+                <p>You haven't saved any private notes yet.</p>
+            {{/if}}
+        </div>
+    </div>
 </main>

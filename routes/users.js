@@ -3,6 +3,7 @@ import express from "express";
 import { SESSION_NAME } from "../config/settings.js";
 import bobaService from "../data/boba.js";
 import reviewsService from "../data/reviews.js";
+import userNotesService from "../data/userNotes.js";
 import usersService from "../data/users.js";
 import {
 	MAX_DISPLAY_NAME_LENGTH,
@@ -193,12 +194,25 @@ router.get("/profile", requireLogin, async (req, res) => {
 
 		//console.log("SESSION USER:", req.session.user);
 
+		const userNotes = await userNotesService.getByUserId(userId);
+
+		const notesWithStores = await Promise.all(
+			userNotes.map(async (note) => {
+				const store = await bobaService.getById(note.store_id);
+				return {
+					...note,
+					store: store,
+				};
+			}),
+		);
+
 		return res.render("profile", {
 			title: "My Profile",
 			displayName: req.session.user.displayName,
 			email: req.session.user.email,
 			reviews: reviewsWithStores,
 			reviewCount: userReviews.length,
+			privateNotes: notesWithStores,
 		});
 	} catch (_e) {
 		return res.status(500).render("error", {
