@@ -31,11 +31,35 @@
 	{{/if}}
 
 	{{#if store.grand_open_date}}
-	<div>
-		<h2>Grand Opening Date</h2>
-		<p>{{formatDate store.grand_open_date}}</p>
-	</div>
-	{{/if}}
+    <div class="store-section">
+        
+        <h2>Grand Opening Date</h2>
+        <p>{{formatDate store.grand_open_date}}</p>
+
+        {{!-- If result is not empty, show Opened For --}}
+        {{#if (storeAgeIfOneYear store.grand_open_date)}}
+            <h2>Opened For</h2>
+            <p class="age-value">{{storeAgeIfOneYear store.grand_open_date}}</p>
+        {{/if}}
+
+    </div>
+{{else}}
+    <div class="store-section">
+        <h2>Store Information</h2>
+
+        <h2>Grand Opening Date</h2>
+        <p>Not available</p>
+
+    </div>
+{{/if}}
+
+	
+	
+	
+	
+	
+	
+	
 
 	{{#if store.tags}}
 	<div>

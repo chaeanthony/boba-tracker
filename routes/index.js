@@ -5,6 +5,8 @@ import reviewsAPI from "../api/reviews.js";
 import { SESSION_NAME } from "../config/settings.js";
 import bobaRoutes from "./boba.js";
 import usersRoutes from "./users.js";
+import {calculateStoreAgeFunc} from "../helpers.js"
+
 
 const constructRoutes = (app) => {
 	app.use(express.json());
@@ -36,9 +38,9 @@ const constructRoutes = (app) => {
 				formatDate: (date) => {
 					if (!date) return "";
 					const d = new Date(date);
-					const month = String(d.getMonth() + 1).padStart(2, "0");
-					const day = String(d.getDate()).padStart(2, "0");
-					const year = d.getFullYear();
+					const month = String(d.getUTCMonth() + 1).padStart(2, "0");
+					const day = String(d.getUTCDate()).padStart(2, "0");
+					const year = d.getUTCFullYear();
 					return `${month}-${day}-${year}`;
 				},
 				formatDateTime: (date) => {
@@ -52,7 +54,29 @@ const constructRoutes = (app) => {
 						minute: "2-digit",
 					});
 				},
-			},
+				
+							  
+			  storeAgeIfOneYear: (date) => {
+                if (!date) return "";
+
+                const now = new Date();
+                const open = new Date(date);
+
+                let years = now.getFullYear() - open.getFullYear();
+                const beforeAnniversary =
+                    now.getMonth() < open.getMonth() ||
+                    (now.getMonth() === open.getMonth() && now.getDate() < open.getDate());
+
+                if (beforeAnniversary) years--;
+
+                if (years < 1) return "";
+
+                
+                return calculateStoreAgeFunc(date);
+            },
+    }
+			  
+					
 		}),
 	);
 	app.set("view engine", "handlebars");
