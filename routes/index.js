@@ -3,10 +3,9 @@ import exphbs from "express-handlebars";
 import session from "express-session";
 import reviewsAPI from "../api/reviews.js";
 import { SESSION_NAME } from "../config/settings.js";
+import { calculateStoreAgeFunc } from "../helpers.js";
 import bobaRoutes from "./boba.js";
 import usersRoutes from "./users.js";
-import {calculateStoreAgeFunc} from "../helpers.js"
-
 
 const constructRoutes = (app) => {
 	app.use(express.json());
@@ -54,29 +53,26 @@ const constructRoutes = (app) => {
 						minute: "2-digit",
 					});
 				},
-				
-							  
-			  storeAgeIfOneYear: (date) => {
-                if (!date) return "";
 
-                const now = new Date();
-                const open = new Date(date);
+				storeAgeIfOneYear: (date) => {
+					if (!date) return "";
 
-                let years = now.getFullYear() - open.getFullYear();
-                const beforeAnniversary =
-                    now.getMonth() < open.getMonth() ||
-                    (now.getMonth() === open.getMonth() && now.getDate() < open.getDate());
+					const now = new Date();
+					const open = new Date(date);
 
-                if (beforeAnniversary) years--;
+					let years = now.getFullYear() - open.getFullYear();
+					const beforeAnniversary =
+						now.getMonth() < open.getMonth() ||
+						(now.getMonth() === open.getMonth() &&
+							now.getDate() < open.getDate());
 
-                if (years < 1) return "";
+					if (beforeAnniversary) years--;
 
-                
-                return calculateStoreAgeFunc(date);
-            },
-    }
-			  
-					
+					if (years < 1) return "";
+
+					return calculateStoreAgeFunc(date);
+				},
+			},
 		}),
 	);
 	app.set("view engine", "handlebars");
