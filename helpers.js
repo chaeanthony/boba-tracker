@@ -146,3 +146,40 @@ export const sortReviews = (reviews, sortOption) => {
 			);
 	}
 };
+
+export const calculateStoreAgeFunc = (grandOpenDate) => {
+	if (!grandOpenDate) return "N/A";
+
+	const grandOpen = new Date(grandOpenDate);
+	const today = new Date();
+
+	let years = today.getFullYear() - grandOpen.getFullYear();
+	let months = today.getMonth() - grandOpen.getMonth();
+	const days = today.getDate() - grandOpen.getDate();
+
+	// Adjust months based on day difference
+	if (days < 0) {
+		months--; // day hasn't reached yet → month not completed
+	}
+
+	// Adjust years if month went negative
+	if (months < 0) {
+		years--;
+		months += 12;
+	}
+
+	// Special cases
+	if (years === 0 && months === 0) {
+		return "Opened this month";
+	}
+
+	if (years === 0) {
+		return `${months} month${months !== 1 ? "s" : ""} old`;
+	}
+
+	if (months === 0) {
+		return `${years} year${years !== 1 ? "s" : ""} old`;
+	}
+
+	return `${years} year${years !== 1 ? "s" : ""}, ${months} month${months !== 1 ? "s" : ""} old`;
+};
