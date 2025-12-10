@@ -47,7 +47,7 @@ const createUser = async (email, password, displayName) => {
 	return {
 		_id: newUser._id,
 		email: newUser.email,
-		display_name: newUser.displayName,
+		displayName: newUser.displayName,
 		created_at: newUser.createdAt,
 	};
 };

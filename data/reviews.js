@@ -3,6 +3,7 @@ import { reviews } from "../config/mongoCollections.js";
 import { NotFoundError, ValidationError } from "../errors.js";
 import { validateComment, validateId, validateRating } from "../helpers.js";
 import { updateStoreStats } from "./scores.js";
+import usersService from "./users.js";
 
 const getByStoreId = async (storeId) => {
 	const valStoreID = validateId(storeId);
@@ -61,6 +62,8 @@ const createReview = async (storeId, userId, rating, comment) => {
 	const valUserID = validateId(userId);
 	const parsedRating = validateRating(rating);
 	const trimmedComment = validateComment(comment);
+	const user = await usersService.getUserById(userId);
+	const trimmedDisplayName = user.displayName.trim();
 
 	try {
 		const existingReview = await getUserReviewForStore(userId, storeId);
@@ -79,6 +82,7 @@ const createReview = async (storeId, userId, rating, comment) => {
 	const newReview = {
 		store_id: new ObjectId(valStoreID),
 		user_id: new ObjectId(valUserID),
+		displayName: trimmedDisplayName,
 		rating: parsedRating,
 		comment: trimmedComment,
 		created_at: new Date(),
