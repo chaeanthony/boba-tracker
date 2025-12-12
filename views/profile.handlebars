@@ -17,7 +17,7 @@
                     {{#each reviews}}
                         <div class="review-card">
                             <h3>
-                                <a href="/stores/{{store._id}}">{{store.name}}</a>
+                                <a class="store-link" href="/stores/{{store._id}}">{{store.name}}</a>
                             </h3>
                             <p><strong>Rating:</strong> {{rating}}/5 ⭐</p>
                             <p><strong>Review:</strong> {{comment}}</p>
@@ -26,7 +26,7 @@
                     {{/each}}
                 </div>
             {{else}}
-                <p>You haven't reviewed any stores yet. <a href="/">Start exploring!</a></p>
+                <p>You haven't reviewed any stores yet. <a class="explore-link" href="/">Start exploring!</a></p>
             {{/if}}
         </div>
 
@@ -39,9 +39,9 @@
                     {{#each privateNotes}}
                         <div class="note-card">
                             <h3>
-                                <a href="/stores/{{store._id}}">{{store.name}}</a>
+                                <a class="store-link" href="/stores/{{store._id}}">{{store.name}}</a>
                             </h3>
-                            <p>{{text}}</p>
+                            <p><strong>Note:</strong> {{text}}</p>
                             <p class="note-date">{{formatDateTime updated_at}}</p>
                         </div>
                     {{/each}}

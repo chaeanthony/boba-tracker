@@ -71,6 +71,12 @@ router.post("/signup", async (req, res) => {
 				errorMessage: `Password must be between ${MIN_PASSWORD_LENGTH} and ${MAX_PASSWORD_LENGTH} characters long.`,
 			});
 		}
+		if (trimmedPassword !== trimmedConfirm) {
+			return res.status(400).render("error", {
+				title: "Invalid",
+				errorMessage: "Password and confirmed password do not match.",
+			});
+		}
 		if (trimmedDisplayName.length > MAX_DISPLAY_NAME_LENGTH) {
 			return res.status(400).render("error", {
 				title: "Invalid",

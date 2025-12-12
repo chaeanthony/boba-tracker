@@ -100,8 +100,9 @@
 				{{#each reviews}}
 				<div class='review-item-container'>
 					<div class='review-rating'>{{this.rating}}</div>
-					<div class='review-comment'>{{this.comment}}</div>
-					<div class='review-date'>{{formatDate this.updated_at}}</div>
+					<div class='review-comment'>Comment: {{this.comment}}</div>
+					<div class='review-date'>Date: {{formatDate this.updated_at}}</div>
+					<div class='review-displayName'>Reviewer: {{this.displayName}}</div>
 				</div>
 				{{/each}}
 			</div>
@@ -132,7 +133,7 @@
 
 						<div class="comment-container">
 							<label for='comment-input'>Comment:</label>
-							<textarea id='comment-input' name='comment' maxlength='1000'
+							<textarea class="textarea-input" id='comment-input' name='comment' maxlength='1000'
 								rows='5'>{{userReview.comment}}</textarea>
 							<div id='char-counter'>{{userReview.comment.length}}/1000 characters</div>
 						</div>
@@ -162,7 +163,7 @@
 
 						<div class="comment-container">
 							<label for='comment-input'>Comment:</label>
-							<textarea id='comment-input' name='comment' maxlength='1000' rows='5'></textarea>
+							<textarea class="textarea-input" id='comment-input' name='comment' maxlength='1000' rows='5'></textarea>
 							<div id='char-counter'>0/1000 characters</div>
 						</div>
 
@@ -184,6 +185,7 @@
 						<div class="comment-container">
 							<label for="private-note-input">Private Note:</label>
 							<textarea
+								class="textarea-input"
 								id="private-note-input"
 								name="note"
 								rows="4"
