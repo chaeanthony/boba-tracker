@@ -116,8 +116,8 @@
 				<div>
 					<h2>My Review</h2>
 					<form id="update-review-form">
-						<input type='hidden' name='store_id' value='{{store._id}}' />
-						<input type='hidden' name='review_id' value='{{userReview._id}}' />
+						<input type='hidden' name='store_id' value='{{store._id}}'>
+						<input type='hidden' name='review_id' value='{{userReview._id}}'>
 
 						<div>
 							<label>Rating:</label>
@@ -128,7 +128,7 @@
 								<span class='star' data-rating='4'>★</span>
 								<span class='star' data-rating='5'>★</span>
 							</div>
-							<input type='hidden' id='rating-input' name='rating' value='{{userReview.rating}}' required />
+							<input type='number' id='rating-input' name='rating' value='{{userReview.rating}}' required>
 						</div>
 
 						<div class="comment-container">
@@ -147,7 +147,7 @@
 				<div>
 					<h2>Write a Review</h2>
 					<form id="create-review-form">
-						<input type='hidden' name='store_id' value='{{store._id}}' />
+						<input type='hidden' name='store_id' value='{{store._id}}'>
 
 						<div>
 							<label>Rating:</label>
@@ -158,7 +158,7 @@
 								<span class='star' data-rating='4'>★</span>
 								<span class='star' data-rating='5'>★</span>
 							</div>
-							<input type='hidden' id='rating-input' name='rating' required />
+							<input type='number' id='rating-input' name='rating' required>
 						</div>
 
 						<div class="comment-container">
@@ -180,7 +180,7 @@
 					<p class="helper-text">Only you can see these notes.</p>
 
 					<form id="private-note-form">
-						<input type="hidden" name="store_id" value="{{store._id}}" />
+						<input type="hidden" name="store_id" value="{{store._id}}">
 
 						<div class="comment-container">
 							<label for="private-note-input">Private Note:</label>
